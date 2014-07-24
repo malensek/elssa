@@ -30,6 +30,12 @@ import java.io.IOException;
 import galileo.net.GalileoMessage;
 import galileo.net.NetworkDestination;
 
+/**
+ * Tracks the context of an event and allows retrieving event metadata.  Allows
+ * replies to be sent directly to their originating source.
+ *
+ * @author malensek
+ */
 public class EventContext {
 
     private GalileoMessage message;
