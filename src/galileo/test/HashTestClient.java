@@ -23,7 +23,7 @@ any theory of liability, whether in contract, strict liability, or tort
 software, even if advised of the possibility of such damage.
 */
 
-package galileo.test.net;
+package galileo.test;
 
 import galileo.client.EventPublisher;
 import galileo.net.ClientMessageRouter;

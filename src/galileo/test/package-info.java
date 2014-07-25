@@ -26,4 +26,4 @@ software, even if advised of the possibility of such damage.
 /**
  * Includes tests for the Galileo network functionality.
  */
-package galileo.test.net;
+package galileo.test;

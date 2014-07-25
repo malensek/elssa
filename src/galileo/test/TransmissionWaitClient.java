@@ -1,4 +1,4 @@
-package galileo.test.net;
+package galileo.test;
 
 import java.io.IOException;
 
