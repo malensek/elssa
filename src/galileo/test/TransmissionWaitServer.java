@@ -1,4 +1,4 @@
-package galileo.test.net;
+package galileo.test;
 
 import java.io.IOException;
 
@@ -31,9 +31,9 @@ public class TransmissionWaitServer implements MessageListener {
     @Override
     public void onMessage(GalileoMessage message) {
         counter++;
-//        if (counter % 1000 == 0) {
-//            System.out.println("Messages received: " + counter);
-//        }
+        if (counter % 1000 == 0) {
+            System.out.println("Messages received: " + counter);
+        }
 
         System.out.println(counter);
 
