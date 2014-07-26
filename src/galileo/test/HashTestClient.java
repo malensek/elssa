@@ -25,7 +25,11 @@ software, even if advised of the possibility of such damage.
 
 package galileo.test;
 
+import java.security.MessageDigest;
+import java.util.Random;
+
 import galileo.net.ClientMessageRouter;
+import galileo.net.GalileoMessage;
 import galileo.net.NetworkDestination;
 
 /**
@@ -38,10 +42,14 @@ public class HashTestClient {
 
     private ClientMessageRouter messageRouter;
     private NetworkDestination netDest;
+    private Random random = new Random();
+    private MessageDigest md;
 
     public HashTestClient(NetworkDestination netDest) throws Exception {
         this.netDest = netDest;
         messageRouter = new ClientMessageRouter();
+
+        this.md = MessageDigest.getInstance("SHA1");
     }
 
     public void disconnect() {
@@ -56,13 +64,18 @@ public class HashTestClient {
     public void test(int size, int messages, boolean corrupt)
     throws Exception {
         for (int i = 0; i < messages; ++i) {
-            HashTestEvent hte = new HashTestEvent(size);
-            if (hte.verify() == false) {
-                System.out.println("Local event corrupted!");
-            }
-            if (corrupt) {
-                hte.corrupt();
-            }
+            byte[] data = new byte[size];
+            random.nextBytes(data);
+            byte[] checksum = md.digest(data);
+
+            byte[] payload = new byte[data.length + checksum.length];
+            System.arraycopy(checksum, 0, payload, 0, checksum.length);
+            System.arraycopy(data, 0, payload, checksum.length, data.length);
+
+//            if (corrupt) {
+//                hte.corrupt();
+//            }
+            GalileoMessage message = new GalileoMessage(payload);
             messageRouter.sendMessage(netDest, message);
         }
     }
