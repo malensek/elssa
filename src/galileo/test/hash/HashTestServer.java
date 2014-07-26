@@ -23,11 +23,10 @@ any theory of liability, whether in contract, strict liability, or tort
 software, even if advised of the possibility of such damage.
 */
 
-package galileo.test;
+package galileo.test.hash;
 
 import java.io.IOException;
 
-import galileo.event.EventContainer;
 import galileo.net.GalileoMessage;
 import galileo.net.MessageListener;
 import galileo.net.NetworkDestination;
