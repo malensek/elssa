@@ -25,7 +25,6 @@ software, even if advised of the possibility of such damage.
 
 package galileo.test;
 
-import galileo.client.EventPublisher;
 import galileo.net.ClientMessageRouter;
 import galileo.net.NetworkDestination;
 
@@ -38,13 +37,11 @@ import galileo.net.NetworkDestination;
 public class HashTestClient {
 
     private ClientMessageRouter messageRouter;
-    private EventPublisher publisher;
     private NetworkDestination netDest;
 
     public HashTestClient(NetworkDestination netDest) throws Exception {
         this.netDest = netDest;
         messageRouter = new ClientMessageRouter();
-        publisher = new EventPublisher(messageRouter);
     }
 
     public void disconnect() {
@@ -66,7 +63,7 @@ public class HashTestClient {
             if (corrupt) {
                 hte.corrupt();
             }
-            publisher.publish(netDest, hte);
+            messageRouter.sendMessage(netDest, message);
         }
     }
 
