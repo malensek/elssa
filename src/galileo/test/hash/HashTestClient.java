@@ -25,12 +25,14 @@ software, even if advised of the possibility of such damage.
 
 package galileo.test.hash;
 
+import java.io.ByteArrayOutputStream;
 import java.security.MessageDigest;
 import java.util.Random;
 
 import galileo.net.ClientMessageRouter;
 import galileo.net.GalileoMessage;
 import galileo.net.NetworkDestination;
+import galileo.serialization.SerializationOutputStream;
 
 /**
  * Sends events to a HashTestServer instance that will verify the events
@@ -68,10 +70,13 @@ public class HashTestClient {
             random.nextBytes(data);
             byte[] checksum = md.digest(data);
 
-            byte[] payload = new byte[data.length + checksum.length];
-            System.arraycopy(checksum, 0, payload, 0, checksum.length);
-            System.arraycopy(data, 0, payload, checksum.length, data.length);
+            ByteArrayOutputStream raw = new ByteArrayOutputStream();
+            SerializationOutputStream sOut = new SerializationOutputStream(raw);
+            sOut.writeField(checksum);
+            sOut.writeField(data);
+            sOut.close();
 
+            byte[] payload = raw.toByteArray();
 //            if (corrupt) {
 //                hte.corrupt();
 //            }
