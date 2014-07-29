@@ -95,7 +95,7 @@ public class HashTestClient {
         boolean corrupt = (args.length == 4);
 
         NetworkDestination netDest = new NetworkDestination(
-                hostname, BufferTestServer.PORT);
+                hostname, HashTestServer.PORT);
         HashTestClient htc = new HashTestClient(netDest);
 
         if (corrupt == false) {
