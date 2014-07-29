@@ -25,14 +25,18 @@ software, even if advised of the possibility of such damage.
 
 package galileo.test.hash;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
+import java.math.BigInteger;
 import java.security.MessageDigest;
+import java.util.Arrays;
+
 import galileo.net.GalileoMessage;
 import galileo.net.MessageListener;
 import galileo.net.NetworkDestination;
 import galileo.net.ServerMessageRouter;
-import galileo.serialization.Serializer;
+import galileo.serialization.SerializationInputStream;
 
 /**
  * Receives messages with random binary payloads (HashTestEvents), and verifies
@@ -97,16 +101,12 @@ public class HashTestServer implements MessageListener {
             return false;
         }
     }
+
     @Override
     public void onMessage(GalileoMessage message) {
         counter++;
         try {
-            EventContainer container = Serializer.deserialize(
-                    EventContainer.class, message.getPayload());
-            HashTestEvent event = Serializer.deserialize(
-                    HashTestEvent.class, container.getEventPayload());
-
-            if (event.verify() == false) {
+            if (verifyMessage(message) == false) {
                 bad++;
                 System.out.println("Corrupted event detected!");
             }
