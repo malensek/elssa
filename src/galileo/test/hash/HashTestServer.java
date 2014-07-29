@@ -72,6 +72,25 @@ public class HashTestServer implements MessageListener {
         System.out.println(bad + " bad events");
     }
 
+    public boolean verifyMessage(GalileoMessage message) throws IOException {
+        ByteArrayInputStream raw = new ByteArrayInputStream(
+                message.getPayload());
+        SerializationInputStream sIn = new SerializationInputStream(raw);
+        byte[] checksum = sIn.readField();
+        byte[] payload = sIn.readField();
+        sIn.close();
+
+        byte[] localCheck = md.digest(payload);
+
+        if (Arrays.equals(checksum, localCheck)) {
+            return true;
+        } else {
+            BigInteger b1 = new BigInteger(1, checksum);
+            BigInteger b2 = new BigInteger(1, localCheck);
+            System.out.println(b1.toString(16) + " =/= " + b2.toString(16));
+            return false;
+        }
+    }
     @Override
     public void onMessage(GalileoMessage message) {
         counter++;
