@@ -27,6 +27,7 @@ package galileo.test.hash;
 
 import java.io.IOException;
 
+import java.security.MessageDigest;
 import galileo.net.GalileoMessage;
 import galileo.net.MessageListener;
 import galileo.net.NetworkDestination;
@@ -46,6 +47,11 @@ public class HashTestServer implements MessageListener {
     private long counter;
     private long bad;
     private ServerMessageRouter messageRouter;
+    private MessageDigest md;
+
+    public HashTestServer() throws Exception {
+        this.md = MessageDigest.getInstance("SHA1");
+    }
 
     public void listen()
     throws IOException {
