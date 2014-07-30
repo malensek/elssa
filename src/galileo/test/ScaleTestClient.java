@@ -31,7 +31,7 @@ import galileo.net.ClientMessageRouter;
 import galileo.net.GalileoMessage;
 import galileo.net.MessageListener;
 import galileo.net.NetworkDestination;
-import galileo.util.PerformanceTimer;
+import galileo.test.util.PerformanceTimer;
 
 public class ScaleTestClient implements MessageListener, Runnable {
 

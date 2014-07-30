@@ -31,7 +31,7 @@ import java.nio.ByteBuffer;
 
 import galileo.net.MessageRouter;
 import galileo.net.NetworkDestination;
-import galileo.util.PerformanceTimer;
+import galileo.test.util.PerformanceTimer;
 
 public class BlockingScaleTestClient implements Runnable {
 
