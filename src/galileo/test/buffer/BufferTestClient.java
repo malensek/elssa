@@ -23,15 +23,13 @@ any theory of liability, whether in contract, strict liability, or tort
 software, even if advised of the possibility of such damage.
 */
 
-package galileo.test;
+package galileo.test.buffer;
 
 import java.io.IOException;
 import java.util.Random;
 
-import galileo.client.EventPublisher;
-import galileo.comm.StorageRequest;
-import galileo.dataset.Block;
 import galileo.net.ClientMessageRouter;
+import galileo.net.GalileoMessage;
 import galileo.net.NetworkDestination;
 
 /**
@@ -44,14 +42,12 @@ public class BufferTestClient {
     private static final int MESSAGE_SIZE = 1024;
 
     private ClientMessageRouter messageRouter;
-    private EventPublisher publisher;
     private NetworkDestination netDest;
     private Random random = new Random();
 
     public BufferTestClient(NetworkDestination netDest) throws Exception {
         this.netDest = netDest;
         messageRouter = new ClientMessageRouter();
-        publisher = new EventPublisher(messageRouter);
     }
 
     public void disconnect() {
@@ -63,9 +59,8 @@ public class BufferTestClient {
         for (int i = 0; i < messages; ++i) {
             byte[] randomBytes = new byte[MESSAGE_SIZE];
             random.nextBytes(randomBytes);
-            Block block = new Block(randomBytes);
-            StorageRequest store = new StorageRequest(block);
-            publisher.publish(netDest, store);
+            GalileoMessage msg = new GalileoMessage(randomBytes);
+            messageRouter.sendMessage(netDest, msg);
         }
     }
 
