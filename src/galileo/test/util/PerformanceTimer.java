@@ -67,6 +67,10 @@ public class PerformanceTimer {
         public double timeInMs() {
             return ((end - start) * 1E-6);
         }
+
+        public double rawTime() {
+            return end - start;
+        }
     }
 
     /**
