@@ -29,7 +29,5 @@ software, even if advised of the possibility of such damage.
  * prevents clients from trying to send so much data that they run out of
  * memory.  Since the send operation won't block, an application can easily
  * generate too much data before the network operations are complete.
- *
- * @author malensek
  */
 package galileo.test.buffer;
