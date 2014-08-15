@@ -37,6 +37,8 @@ public interface MessageListener {
      * Called when a message is ready to be processed.  This method is invoked
      * by a Selector thread (from a {@link MessageRouter} instance).  To avoid
      * hurting performance, the implementation of onMessage must be lightweight.
+     * In fact, blocking in this method implementation can cause serious
+     * problems.
      * <p>
      * An example use case could involve placing incoming messages in a blocking
      * queue and then having another thread process them.  If the queue gets too

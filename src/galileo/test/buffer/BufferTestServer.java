@@ -72,6 +72,10 @@ public class BufferTestServer implements MessageListener {
     public void onMessage(GalileoMessage message) {
         counter++;
         try {
+            /* We sleep here to help force the client-side buffer to fill up.
+             * It's worth noting that doing something like this in production is
+             * a very, very bad idea because it blocks the MessageRouter thread.
+             * onMessage should do as little (non-blocking) work as possible. */
             Thread.sleep(random.nextInt(5));
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
