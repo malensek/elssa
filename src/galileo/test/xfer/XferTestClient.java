@@ -63,6 +63,7 @@ public class XferTestClient {
         pt = new PerformanceTimer("send");
         pt.start();
         for (int i = 0; i < numMessages; ++i) {
+            random.nextBytes(randomBytes);
             GalileoMessage msg = new GalileoMessage(randomBytes);
             Transmission t = messageRouter.sendMessage(server, msg);
             t.finish();
