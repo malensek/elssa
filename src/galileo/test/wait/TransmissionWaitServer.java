@@ -1,4 +1,4 @@
-package galileo.test;
+package galileo.test.wait;
 
 import java.io.IOException;
 
