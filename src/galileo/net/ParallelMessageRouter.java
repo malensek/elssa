@@ -31,22 +31,22 @@ import java.io.IOException;
  * A MessageRouter instance that can act as both a server and a client.
  * This implementation is made up of a {@link ClientMessageRouter} and a
  * {@link ServerMessageRouter} instance, meaning outgoing and incoming messages
- * are processed by separate threads.
+ * are processed by separate threads (in parallel).
  *
  * @author malensek
  */
-public class IOMessageRouter {
+public class ParallelMessageRouter {
 
     private ServerMessageRouter serverRouter;
     private ClientMessageRouter clientRouter;
 
-    public IOMessageRouter()
+    public ParallelMessageRouter()
     throws IOException {
         clientRouter = new ClientMessageRouter();
         serverRouter = new ServerMessageRouter();
     }
 
-    public IOMessageRouter(int readBufferSize, int maxWriteQueueSize)
+    public ParallelMessageRouter(int readBufferSize, int maxWriteQueueSize)
     throws IOException {
         clientRouter = new ClientMessageRouter(
                 readBufferSize, maxWriteQueueSize);
