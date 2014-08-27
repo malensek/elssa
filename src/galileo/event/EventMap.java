@@ -43,6 +43,13 @@ public abstract class EventMap {
 
     public EventMap() { }
 
+    /**
+     * Maps an event identifier to a particular Event class implementation.
+     * @param id Event Identifier
+     * @param clazz Class to map to id
+     * @throws IllegalArgumentException if the event id provided has already
+     * been mapped to an Event implementation.
+     */
     protected void addMapping(int id, Class<? extends Event> clazz) {
         if (intToClass.containsKey(id)) {
             throw new IllegalArgumentException(
