@@ -44,6 +44,10 @@ public abstract class EventMap {
     public EventMap() { }
 
     protected void addMapping(int id, Class<? extends Event> clazz) {
+        if (intToClass.containsKey(id)) {
+            throw new IllegalArgumentException(
+                    "Event id has already been mapped!");
+        }
         intToClass.put(id, clazz);
         classToInt.put(clazz, id);
     }
