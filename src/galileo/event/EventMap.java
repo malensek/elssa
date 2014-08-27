@@ -71,10 +71,19 @@ public abstract class EventMap {
     protected void addMapping(Class<? extends Event> clazz) {
         addMapping(intToClass.size(), clazz);
     }
+
+    /**
+     * Retrieves the class associated with the provided event identifier.
+     * @param id Event identifier to retrieve an Event implementation for.
+     */
     public Class<? extends Event> getClass(int id) {
         return intToClass.get(id);
     }
 
+    /**
+     * Retrieves the event identifier associated with a given Event class.
+     * @param clazz The class to retrieve the event identifier for.
+     */
     public int getInt(Class<?> clazz) {
         return classToInt.get(clazz);
     }
