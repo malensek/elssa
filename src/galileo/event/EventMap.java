@@ -48,6 +48,18 @@ public abstract class EventMap {
         classToInt.put(clazz, id);
     }
 
+    /**
+     * Maps an Event class implementation to an automatically-generated event
+     * identifier.  This method is useful for applications with a small number
+     * of events whose identifiers can change over time, but should generally
+     * not be used in production settings.
+     * @param clazz Class to map to id
+     * @throws IllegalArgumentException if the event id provided has already
+     * been mapped to an Event implementation.
+     */
+    protected void addMapping(Class<? extends Event> clazz) {
+        addMapping(intToClass.size(), clazz);
+    }
     public Class<? extends Event> getClass(int id) {
         return intToClass.get(id);
     }
