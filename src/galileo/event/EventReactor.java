@@ -190,8 +190,7 @@ public class EventReactor implements MessageListener {
             /* Propagating all the possible reflection-related exceptions up to
              * clients seemed undesirable from a usability perspective here, so
              * we wrap this up in a catch-all exception. */
-            //TODO eventexception should include details
-            throw new EventException("Error processing event!");
+            throw new EventException("Error processing event!", e);
         }
     }
 
