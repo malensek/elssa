@@ -116,9 +116,8 @@ public class Serializer {
              * simplify implementations.  However, if the current log level
              * permits, we also embed more information in the exception detail
              * message. */
-            //TODO SerializationException should contain more detail
             throw new SerializationException("Could not instantiate object "
-                    + "for deserialization.");
+                    + "for deserialization.", e);
         }
 
         return obj;

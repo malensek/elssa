@@ -36,4 +36,8 @@ public class SerializationException extends Exception {
     public SerializationException(String s) {
         super(s);
     }
+
+    public SerializationException(String s, Throwable t) {
+        super(s, t);
+    }
 }
