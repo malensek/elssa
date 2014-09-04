@@ -27,12 +27,12 @@ package galileo.event;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Level;
@@ -184,6 +184,9 @@ public class EventReactor implements MessageListener {
             Method method = classToMethod.get(event.getClass());
             EventContext context = new EventContext(message, eventWrapper);
             method.invoke(handlerObject, event, context);
+        } catch (InvocationTargetException e) {
+            logger.log(Level.WARNING,
+                    "Unhandled exception in invoked event handler method", e);
         } catch (IOException | SerializationException e) {
             throw e;
         } catch (Exception e) {
