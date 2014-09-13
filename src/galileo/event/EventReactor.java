@@ -105,7 +105,7 @@ public class EventReactor implements MessageListener {
             for (Annotation a : m.getAnnotations()) {
                 if (a.annotationType().equals(EventHandler.class)) {
                     /* This method is an event handler */
-                    logger.log(Level.INFO, "Found EventHandler annotation on "
+                    logger.log(Level.FINE, "Found EventHandler annotation on "
                             + "method: {0}", m.getName());
 
                     Class<?>[] params = m.getParameterTypes();
@@ -130,7 +130,7 @@ public class EventReactor implements MessageListener {
                         break;
                     }
 
-                    logger.log(Level.INFO,
+                    logger.log(Level.FINE,
                             "Linking handler method [{0}] to class [{1}]",
                             new Object[] { m.getName(), eventClass.getName() });
                     classToMethod.put(eventClass, m);
