@@ -185,8 +185,8 @@ public class EventReactor implements MessageListener {
             EventContext context = new EventContext(message, eventWrapper);
             method.invoke(handlerObject, event, context);
         } catch (InvocationTargetException e) {
-            logger.log(Level.WARNING,
-                    "Unhandled exception in invoked event handler method", e);
+            throw new EventException("Unhandled exception in invoked "
+                    + "event handler method", e);
         } catch (IOException | SerializationException e) {
             throw e;
         } catch (Exception e) {
