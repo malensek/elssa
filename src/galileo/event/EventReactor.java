@@ -27,12 +27,12 @@ package galileo.event;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Level;
@@ -105,7 +105,7 @@ public class EventReactor implements MessageListener {
             for (Annotation a : m.getAnnotations()) {
                 if (a.annotationType().equals(EventHandler.class)) {
                     /* This method is an event handler */
-                    logger.log(Level.INFO, "Found EventHandler annotation on "
+                    logger.log(Level.FINE, "Found EventHandler annotation on "
                             + "method: {0}", m.getName());
 
                     Class<?>[] params = m.getParameterTypes();
@@ -130,7 +130,7 @@ public class EventReactor implements MessageListener {
                         break;
                     }
 
-                    logger.log(Level.INFO,
+                    logger.log(Level.FINE,
                             "Linking handler method [{0}] to class [{1}]",
                             new Object[] { m.getName(), eventClass.getName() });
                     classToMethod.put(eventClass, m);
@@ -184,14 +184,16 @@ public class EventReactor implements MessageListener {
             Method method = classToMethod.get(event.getClass());
             EventContext context = new EventContext(message, eventWrapper);
             method.invoke(handlerObject, event, context);
+        } catch (InvocationTargetException e) {
+            throw new EventException("Unhandled exception in invoked "
+                    + "event handler method", e);
         } catch (IOException | SerializationException e) {
             throw e;
         } catch (Exception e) {
             /* Propagating all the possible reflection-related exceptions up to
              * clients seemed undesirable from a usability perspective here, so
              * we wrap this up in a catch-all exception. */
-            //TODO eventexception should include details
-            throw new EventException("Error processing event!");
+            throw new EventException("Error processing event!", e);
         }
     }
 

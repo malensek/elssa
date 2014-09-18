@@ -36,4 +36,8 @@ public class EventException extends Exception {
     public EventException(String s) {
         super(s);
     }
+
+    public EventException(String s, Throwable e) {
+        super(s, e);
+    }
 }
