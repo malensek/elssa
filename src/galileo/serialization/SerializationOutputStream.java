@@ -109,6 +109,14 @@ public class SerializationOutputStream extends DataOutputStream {
         }
     }
 
+    public void writeStringCollection(Collection<String> collection)
+    throws IOException {
+        writeInt(collection.size());
+        for (String str : collection) {
+            writeString(str);
+        }
+    }
+
     public void writeSimpleMap(SimpleMap<?, ? extends ByteSerializable> map)
     throws IOException {
         writeInt(map.size());
