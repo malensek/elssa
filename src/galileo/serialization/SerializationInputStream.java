@@ -79,11 +79,19 @@ public class SerializationInputStream extends DataInputStream {
     public <T extends ByteSerializable> void readSerializableCollection(
             Class<T> type, Collection<T> collection)
     throws IOException, SerializationException {
-
         int size = readInt();
         for (int i = 0; i < size; ++i) {
             T obj = Serializer.deserializeFromStream(type, this);
             collection.add(obj);
+        }
+    }
+
+    public void readStringCollection(Collection<String> collection)
+    throws IOException {
+        int size = readInt();
+        for (int i = 0; i < size; ++i) {
+            String str = readString();
+            collection.add(str);
         }
     }
 
