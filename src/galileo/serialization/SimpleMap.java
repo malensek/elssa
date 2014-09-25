@@ -31,7 +31,8 @@ import galileo.serialization.ByteSerializable;
 
 /**
  * Defines a very basic serializable map that consists of Key, Value pairs
- * wherein the Key can be ascertained by the Value directly.
+ * wherein the Key can be ascertained by the Value directly. For example, a
+ * class that has a 'name' attribute that we wish to use as a lookup key.
  *
  * @author malensek
  */
