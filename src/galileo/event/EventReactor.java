@@ -53,6 +53,8 @@ public class EventReactor implements MessageListener {
 
     private static final Logger logger = Logger.getLogger("galileo");
 
+    private static final int DEFAULT_QUEUE_SZ = 100000;
+
     private Class<?> handlerClass;
     private Object handlerObject;
 
@@ -78,6 +80,7 @@ public class EventReactor implements MessageListener {
         this.handlerObject = handlerObject;
         this.eventWrapper = new BasicEventWrapper(eventMap);
         linkEventHandlers();
+        messageQueue = new LinkedBlockingQueue<>(DEFAULT_QUEUE_SZ);
     }
 
     /**
@@ -92,6 +95,7 @@ public class EventReactor implements MessageListener {
         this.handlerObject = handlerObject;
         this.eventWrapper = wrapper;
         linkEventHandlers();
+        messageQueue = new LinkedBlockingQueue<>(DEFAULT_QUEUE_SZ);
     }
 
     /**
