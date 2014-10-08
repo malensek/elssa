@@ -24,10 +24,11 @@ software, even if advised of the possibility of such damage.
 */
 
 /**
- * Tests the client-side send buffer, which can be modified with the
- * galileo.net.MessageRouter.writeQueueSize system property.  This buffer
- * prevents clients from trying to send so much data that they run out of
- * memory.  Since the send operation won't block, an application can easily
- * generate too much data before the network operations are complete.
+ * Tests client-side buffer functionality to ensure that a client queueing too
+ * many messages does not completely exhaust its own memory.
+ * <p>
+ * This functionality is particularly relevant when the client is generating raw
+ * data rather than reading it from a source and storing it in memory before
+ * transmission.
  */
 package galileo.test.buffer;
