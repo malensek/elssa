@@ -48,7 +48,7 @@ public class ThroughputClient {
 
     public void send()
     throws IOException {
-        ThroughputMessage msg = new ThroughputMessage(1024 * 10);
+        ThroughputMessage msg = new ThroughputMessage(1000 * 1000);
         messageRouter.sendMessage(netDest, wrapper.wrap(msg));
     }
 
@@ -66,5 +66,6 @@ public class ThroughputClient {
         for (int i = 0; i < 10000; ++i) {
             client.send();
         }
+        System.out.println("All done.");
     }
 }
