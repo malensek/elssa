@@ -28,8 +28,8 @@ package galileo.test.through;
 import java.io.IOException;
 
 import galileo.event.ConcurrentEventReactor;
+import galileo.event.EventContext;
 import galileo.event.EventHandler;
-import galileo.net.MessageContext;
 import galileo.net.ServerMessageRouter;
 
 public class ThroughputServer {
@@ -53,7 +53,7 @@ public class ThroughputServer {
     }
 
     @EventHandler
-    public void handleMessage(ThroughputMessage msg, MessageContext context) {
+    public void handleMessage(ThroughputMessage msg, EventContext context) {
         byte[] payload = msg.getPayload();
         System.out.println("Got " + payload.length + " bytes from "
                 + context.getSource());
