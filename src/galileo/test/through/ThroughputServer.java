@@ -48,6 +48,7 @@ public class ThroughputServer {
     throws IOException {
         messageRouter = new ServerMessageRouter();
         messageRouter.addListener(reactor);
+        reactor.start();
         messageRouter.listen(PORT);
         System.out.println("Listening on port " + PORT);
     }
