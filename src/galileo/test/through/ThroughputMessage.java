@@ -6,7 +6,7 @@ import galileo.event.Event;
 import galileo.serialization.SerializationInputStream;
 import galileo.serialization.SerializationOutputStream;
 
-class ThroughputMessage implements Event {
+public class ThroughputMessage implements Event {
 
     private byte[] payload;
 
