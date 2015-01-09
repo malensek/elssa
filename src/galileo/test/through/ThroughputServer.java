@@ -44,6 +44,8 @@ public class ThroughputServer {
         = new ConcurrentEventReactor(this, eventMap, 8);
     private ServerMessageRouter messageRouter;
 
+    private long counter;
+
     public void start()
     throws IOException {
         messageRouter = new ServerMessageRouter();
@@ -56,8 +58,10 @@ public class ThroughputServer {
     @EventHandler
     public void handleMessage(ThroughputMessage msg, EventContext context) {
         byte[] payload = msg.getPayload();
-        System.out.println("Got " + payload.length + " bytes from "
-                + context.getSource());
+        counter += payload.length / 100000;
+        if (counter % 1000 == 0) {
+            System.out.print('.');
+        }
     }
 
     public static void main(String[] args) throws Exception {
