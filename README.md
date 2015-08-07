@@ -1,4 +1,4 @@
 elssa (ELastic, Scalable Storage Array)
 =======================================
 
-Platform for distributed file system research.
+Platform for distributed storage systems research.
