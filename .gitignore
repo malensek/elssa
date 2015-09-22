@@ -1,18 +1,14 @@
 # Eclipse files
-.project
-.classpath
-.build
+/.project
+/.classpath
+/.settings
 
 # Local dev files
-classes
-depcache
-build.properties
+/build
+/.gradle
 
 # javadoc-generated documentation
 docs/api
 
 # Mac OS File Attributes
 .DS_Store
-
-# Binaries
-lib/galileo-*.jar
