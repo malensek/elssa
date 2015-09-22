@@ -13,3 +13,13 @@ javadoc {
     source = sourceSets.main.allJava
     classpath = configurations.compile
 }
+
+jar {
+    manifest {
+        attributes('Implementation-Title': 'elssa',
+                'Implementation-Vendor': 'Colorado State University',
+                'Implementation-Version': 1.0,
+                'Built-By': System.getProperty('user.name'),
+                'Build-Jdk': System.getProperty('java.version'))
+    }
+}
