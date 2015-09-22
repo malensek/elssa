@@ -23,14 +23,14 @@ any theory of liability, whether in contract, strict liability, or tort
 software, even if advised of the possibility of such damage.
 */
 
-package galileo.event;
+package io.elssa.event;
 
 import galileo.net.GalileoMessage;
 
-import galileo.serialization.SerializationException;
-import galileo.serialization.SerializationInputStream;
-import galileo.serialization.SerializationOutputStream;
-import galileo.serialization.Serializer;
+import io.elssa.serialization.SerializationException;
+import io.elssa.serialization.SerializationInputStream;
+import io.elssa.serialization.SerializationOutputStream;
+import io.elssa.serialization.Serializer;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;

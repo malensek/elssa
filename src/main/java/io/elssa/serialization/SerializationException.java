@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2014, Colorado State University
+Copyright (c) 2013, Colorado State University
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification,
@@ -23,21 +23,21 @@ any theory of liability, whether in contract, strict liability, or tort
 software, even if advised of the possibility of such damage.
 */
 
-package galileo.event;
+package io.elssa.serialization;
 
-public class EventException extends Exception {
+public class SerializationException extends Exception {
 
-    private static final long serialVersionUID = 7898445170109030502L;
+    private static final long serialVersionUID = 571974343405642486L;
 
-    public EventException() {
+    public SerializationException() {
         super();
     }
 
-    public EventException(String s) {
+    public SerializationException(String s) {
         super(s);
     }
 
-    public EventException(String s, Throwable e) {
-        super(s, e);
+    public SerializationException(String s, Throwable t) {
+        super(s, t);
     }
 }

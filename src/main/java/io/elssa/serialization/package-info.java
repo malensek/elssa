@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2014, Colorado State University
+Copyright (c) 2013, Colorado State University
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification,
@@ -23,49 +23,17 @@ any theory of liability, whether in contract, strict liability, or tort
 software, even if advised of the possibility of such damage.
 */
 
-package galileo.event;
-
-import java.io.IOException;
-
-import galileo.net.GalileoMessage;
-import galileo.net.NetworkDestination;
-
 /**
- * Tracks the context of an event and allows retrieving event metadata.  Allows
- * replies to be sent directly to their originating source.
- *
- * @author malensek
+ * Handles serializing/deserializing data to/from the native elssa binary
+ * format.  This package is similar to the Java Externalizable interface, but
+ * has some convenience features to help ease manual serialization.
+ * <p>
+ * Classes that can be serialized using this framework should implement the
+ * {@link io.elssa.serialization.ByteSerializable} interface, which mandates a
+ * serialize() method that converts the implementing class to a binary
+ * representation.  Rather than enforcing an empty constructor and a
+ * deserialize() method, implementing classes are expected to have a constructor
+ * that takes a single SerializationInputStream and uses it to deserialize from
+ * the binary format and initialize the object.
  */
-public class EventContext {
-
-    private GalileoMessage message;
-    private EventWrapper wrapper;
-
-    public EventContext(GalileoMessage message, EventWrapper wrapper) {
-        this.message = message;
-        this.wrapper = wrapper;
-    }
-
-    /**
-     * Send a reply back to the source that created the original event.
-     */
-    public void sendReply(Event e)
-    throws IOException {
-        GalileoMessage m = wrapper.wrap(e);
-        this.message.getContext().sendMessage(m);
-    }
-
-    /**
-     * @return Server port number that this event was sent to.
-     */
-    public int getServerPort() {
-        return message.getContext().getServerPort();
-    }
-
-    /**
-     * @return NetworkDestination of the client that generated the event.
-     */
-    public NetworkDestination getSource() {
-        return message.getContext().getSource();
-    }
-}
+package io.elssa.serialization;

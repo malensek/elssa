@@ -23,21 +23,16 @@ any theory of liability, whether in contract, strict liability, or tort
 software, even if advised of the possibility of such damage.
 */
 
-package galileo.serialization;
+package io.elssa.event;
 
-public class SerializationException extends Exception {
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
-    private static final long serialVersionUID = 571974343405642486L;
-
-    public SerializationException() {
-        super();
-    }
-
-    public SerializationException(String s) {
-        super(s);
-    }
-
-    public SerializationException(String s, Throwable t) {
-        super(s, t);
-    }
-}
+/**
+ * Provides an annotation to be used to map EventTypes to methods or classes
+ * that handle them.
+ *
+ * @author malensek
+ */
+@Retention(RetentionPolicy.RUNTIME)
+public @interface EventHandler { }

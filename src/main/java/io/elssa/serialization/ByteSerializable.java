@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2014, Colorado State University
+Copyright (c) 2013, Colorado State University
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification,
@@ -23,41 +23,40 @@ any theory of liability, whether in contract, strict liability, or tort
 software, even if advised of the possibility of such damage.
 */
 
-package galileo.serialization;
+package io.elssa.serialization;
 
-import java.util.Collection;
+import java.io.IOException;
 
-import galileo.serialization.ByteSerializable;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * Defines a very basic serializable map that consists of Key, Value pairs
- * wherein the Key can be ascertained by the Value directly. For example, a
- * class that has a 'name' attribute that we wish to use as a lookup key.
- *
- * @author malensek
+ * Describes an interface for classes that can be serialized to portable
+ * byte form.
  */
-public interface SimpleMap<K, V extends ByteSerializable> {
+public interface ByteSerializable {
 
     /**
-     * Places an item in this data structure.
-     */
-    public void put(V item);
-
-    /**
-     * Retrieves an item from this data structure.
+     * Annotates constructors used for creating new object instances from a
+     * {@link SerializationInputStream}.
      *
-     * @param key Key of the item to retrieve; for instance, the item's name.
+     * This annotation is intended to increase code readability and also ensure
+     * that a constructor with a SerializationInputStream is intended for
+     * deserialization purposes.
      */
-    public V get(K key);
-
+    @Target(ElementType.CONSTRUCTOR)
+    @Retention(RetentionPolicy.RUNTIME)
+    @Documented
+    public @interface Deserialize { }
 
     /**
-     * Retrieves all the values contained in this data structure.
+     * Serializes this object to binary form by passing it through a
+     * serialization stream.
+     *
+     * @param out stream to serialize to.
      */
-    public Collection<V> values();
-
-    /**
-     * Reports the current size of the data structure.
-     */
-    public int size();
+    public void serialize(SerializationOutputStream out) throws IOException;
 }

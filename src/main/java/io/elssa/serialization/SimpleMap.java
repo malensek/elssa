@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2013, Colorado State University
+Copyright (c) 2014, Colorado State University
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification,
@@ -23,16 +23,41 @@ any theory of liability, whether in contract, strict liability, or tort
 software, even if advised of the possibility of such damage.
 */
 
-package galileo.event;
+package io.elssa.serialization;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
+import java.util.Collection;
+
+import galileo.serialization.ByteSerializable;
 
 /**
- * Provides an annotation to be used to map EventTypes to methods or classes
- * that handle them.
+ * Defines a very basic serializable map that consists of Key, Value pairs
+ * wherein the Key can be ascertained by the Value directly. For example, a
+ * class that has a 'name' attribute that we wish to use as a lookup key.
  *
  * @author malensek
  */
-@Retention(RetentionPolicy.RUNTIME)
-public @interface EventHandler { }
+public interface SimpleMap<K, V extends ByteSerializable> {
+
+    /**
+     * Places an item in this data structure.
+     */
+    public void put(V item);
+
+    /**
+     * Retrieves an item from this data structure.
+     *
+     * @param key Key of the item to retrieve; for instance, the item's name.
+     */
+    public V get(K key);
+
+
+    /**
+     * Retrieves all the values contained in this data structure.
+     */
+    public Collection<V> values();
+
+    /**
+     * Reports the current size of the data structure.
+     */
+    public int size();
+}

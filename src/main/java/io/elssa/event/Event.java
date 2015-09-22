@@ -23,40 +23,15 @@ any theory of liability, whether in contract, strict liability, or tort
 software, even if advised of the possibility of such damage.
 */
 
-package galileo.serialization;
+package io.elssa.event;
 
-import java.io.IOException;
-
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import io.elssa.serialization.ByteSerializable;
 
 /**
- * Describes an interface for classes that can be serialized to portable
- * byte form.
+ * Defines an interface for events in the Galileo network.
+ *
+ * @author malensek
  */
-public interface ByteSerializable {
+public interface Event extends ByteSerializable {
 
-    /**
-     * Annotates constructors used for creating new object instances from a
-     * {@link SerializationInputStream}.
-     *
-     * This annotation is intended to increase code readability and also ensure
-     * that a constructor with a SerializationInputStream is intended for
-     * deserialization purposes.
-     */
-    @Target(ElementType.CONSTRUCTOR)
-    @Retention(RetentionPolicy.RUNTIME)
-    @Documented
-    public @interface Deserialize { }
-
-    /**
-     * Serializes this object to binary form by passing it through a
-     * serialization stream.
-     *
-     * @param out stream to serialize to.
-     */
-    public void serialize(SerializationOutputStream out) throws IOException;
 }

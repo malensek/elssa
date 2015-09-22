@@ -23,7 +23,7 @@ any theory of liability, whether in contract, strict liability, or tort
 software, even if advised of the possibility of such damage.
 */
 
-package galileo.serialization;
+package io.elssa.serialization;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
