@@ -28,7 +28,7 @@ package io.elssa.event;
 import io.elssa.serialization.ByteSerializable;
 
 /**
- * Defines an interface for events in the Galileo network.
+ * Defines an interface for events in the elssa network.
  *
  * @author malensek
  */

@@ -25,6 +25,8 @@ software, even if advised of the possibility of such damage.
 
 package io.elssa.event;
 
+import io.elssa.serialization.SerializationException;
+
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
@@ -41,7 +43,6 @@ import java.util.logging.Logger;
 import galileo.net.GalileoMessage;
 import galileo.net.MessageListener;
 import galileo.net.NetworkDestination;
-import galileo.serialization.SerializationException;
 
 /**
  * Implements the reactor pattern for processing incoming events

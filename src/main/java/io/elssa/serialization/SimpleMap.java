@@ -25,9 +25,9 @@ software, even if advised of the possibility of such damage.
 
 package io.elssa.serialization;
 
-import java.util.Collection;
+import io.elssa.serialization.ByteSerializable;
 
-import galileo.serialization.ByteSerializable;
+import java.util.Collection;
 
 /**
  * Defines a very basic serializable map that consists of Key, Value pairs
