@@ -12,3 +12,4 @@ docs/api
 
 # Mac OS File Attributes
 .DS_Store
+/bin/
