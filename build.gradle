@@ -23,3 +23,16 @@ jar {
                 'Build-Jdk': System.getProperty('java.version'))
     }
 }
+
+task fatJar(type: Jar) {
+    manifest {
+        attributes 'Implementation-Title': 'Gradle Jar File Example',  
+                   'Implementation-Version': 1.0,
+                   'Main-Class': 'com.mkyong.DateUtils'
+    }
+    baseName = project.name + '-all'
+        from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it)
+        } }
+    with jar
+}
+
