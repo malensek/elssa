@@ -14,21 +14,23 @@ javadoc {
     classpath = configurations.compile
 }
 
+Map<String, String> jarAttributes = [
+        'Implementation-Title': 'elssa',
+        'Implementation-Vendor': 'Colorado State University',
+        'Implementation-Version': '1.0',
+        'Built-By': System.getProperty('user.name'),
+        'Build-Jdk': System.getProperty('java.version')
+]
+
 jar {
     manifest {
-        attributes('Implementation-Title': 'elssa',
-                'Implementation-Vendor': 'Colorado State University',
-                'Implementation-Version': 1.0,
-                'Built-By': System.getProperty('user.name'),
-                'Build-Jdk': System.getProperty('java.version'))
+        attributes(jarAttributes)
     }
 }
 
 task fatJar(type: Jar) {
     manifest {
-        attributes 'Implementation-Title': 'Gradle Jar File Example',  
-                   'Implementation-Version': 1.0,
-                   'Main-Class': 'com.mkyong.DateUtils'
+        attributes(jarAttributes)
     }
     baseName = project.name + '-all'
         from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it)
