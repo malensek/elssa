@@ -32,9 +32,12 @@ task fatJar(type: Jar) {
     manifest {
         attributes(jarAttributes)
     }
+
     baseName = project.name + '-all'
-        from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it)
-        } }
+    from configurations.compile.collect {
+        it.isDirectory() ? it : zipTree(it)
+    }
+
     with jar
 }
 
