@@ -43,11 +43,11 @@ public interface MessageListener {
     /**
      * Called when a connection is established with a remote endpoint.
      */
-    //public void onConnect(NetworkDestination endpoint);
+    public void onConnect(NetworkEndpoint endpoint);
 
     /**
      * Called when the MessageListener has been disconnected from a remote
      * endpoint.
      */
-    //public void onDisconnect(NetworkDestination endpoint);
+    public void onDisconnect(NetworkEndpoint endpoint);
 }
