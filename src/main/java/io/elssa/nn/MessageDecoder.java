@@ -29,7 +29,11 @@ public class MessageDecoder extends ReplayingDecoder<DecoderState> {
         case READ_CONTENT:
             ByteBuf frame = buf.readBytes(length);
             checkpoint(DecoderState.READ_LENGTH);
-            out.add(frame);
+
+            byte[] payload = new byte[frame.readableBytes()];
+            frame.readBytes(payload);
+            ElssaMessage msg = new ElssaMessage(payload);
+            out.add(msg);
             break;
 
         default:
