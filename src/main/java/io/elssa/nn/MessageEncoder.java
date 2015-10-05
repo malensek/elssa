@@ -1,0 +1,16 @@
+package io.elssa.nn;
+
+import io.netty.buffer.ByteBuf;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.handler.codec.MessageToByteEncoder;
+
+public class MessageEncoder extends MessageToByteEncoder<ElssaMessage> {
+
+    @Override
+    protected void encode(
+            ChannelHandlerContext ctx, ElssaMessage msg, ByteBuf out) {
+        byte[] payload = msg.payload();
+        out.writeInt(payload.length);
+        out.writeBytes(payload);
+    }
+}
