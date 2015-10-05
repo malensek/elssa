@@ -36,11 +36,4 @@ public class MessageDecoder extends ReplayingDecoder<DecoderState> {
             throw new Error("Unknown decoder state");
     }
     }
-
-    @Override
-    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-        // Close the connection when an exception is raised.
-        cause.printStackTrace();
-        ctx.close();
-    }
 }

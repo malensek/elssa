@@ -26,4 +26,4 @@ software, even if advised of the possibility of such damage.
 /**
  * Creation, management, and dispatch of events.
  */
-package galileo.event;
+package io.elssa.event;
