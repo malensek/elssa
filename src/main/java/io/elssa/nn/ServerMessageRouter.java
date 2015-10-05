@@ -1,9 +1,12 @@
 package io.elssa.nn;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
@@ -17,9 +20,17 @@ public class ServerMessageRouter {
     private EventLoopGroup workerGroup;
     private ServerBootstrap boot;
 
+    private MessageDecoder decoder;
+    private ServerInboundHandler inboundHandler;
+
+    private Map<Integer, ChannelFuture> ports = new HashMap<>();
+
     public ServerMessageRouter() {
         bossGroup = new NioEventLoopGroup();
         workerGroup = new NioEventLoopGroup();
+
+        decoder = new MessageDecoder();
+        inboundHandler = new ServerInboundHandler();
 
         boot = new ServerBootstrap();
         boot.group(bossGroup, workerGroup)
@@ -27,7 +38,8 @@ public class ServerMessageRouter {
             .childHandler(new ChannelInitializer<SocketChannel>() { // (4)
                  @Override
                  public void initChannel(SocketChannel ch) throws Exception {
-                     ch.pipeline().addLast(new ServerMessageHandler());
+                     ch.pipeline().addLast(decoder);
+                     ch.pipeline().addLast(inboundHandler);
                  }
              })
              .option(ChannelOption.SO_BACKLOG, 128)          // (5)
@@ -40,7 +52,49 @@ public class ServerMessageRouter {
 
     public void listen(int port)
     throws IOException, InterruptedException {
-        ChannelFuture f = boot.bind(port).sync();
+        ChannelFuture cf = boot.bind(port).sync();
+        ports.put(port, cf);
         System.out.println("listening");
+    }
+
+    public void close(int port) {
+        ChannelFuture cf = ports.get(port);
+        if (cf == null) {
+            return;
+        }
+        ports.remove(port);
+        cf.channel().disconnect().syncUninterruptibly();
+    }
+
+    /**
+     * Closes the server socket channel and stops processing incoming
+     * messages.
+     */
+    public void shutdown() throws IOException {
+        workerGroup.shutdownGracefully();
+        bossGroup.shutdownGracefully();
+        for (ChannelFuture cf : ports.values()) {
+            cf.channel().close().syncUninterruptibly();
+        }
+    }
+
+    /**
+     * Adds a message listener (consumer) to this MessageRouter.  Listeners
+     * receive messages that are published by this MessageRouter.
+     *
+     * @param listener {@link MessageListener} that will consume messages
+     * published by this MessageRouter.
+     */
+    public void addListener(MessageListener listener) {
+        inboundHandler.addListener(listener);
+    }
+
+    public void removeListener(MessageListener listener) {
+        inboundHandler.removeListener(listener);
+    }
+
+    public static void main(String[] args) throws Exception {
+        ServerMessageRouter smr = new ServerMessageRouter();
+        smr.listen(5555);
     }
 }
