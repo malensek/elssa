@@ -18,7 +18,7 @@ public class ElssaMessage {
      *
      * @return the ElssaMessage payload
      */
-    public byte[] getPayload() {
+    public byte[] payload() {
         return payload;
     }
 }
