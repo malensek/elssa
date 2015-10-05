@@ -37,8 +37,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import galileo.net.GalileoMessage;
 import galileo.net.MessageListener;
@@ -52,7 +53,8 @@ import galileo.net.NetworkDestination;
  */
 public class EventReactor implements MessageListener {
 
-    private static final Logger logger = Logger.getLogger("galileo");
+    private static final Logger logger
+        = LoggerFactory.getLogger(EventReactor.class);
 
     private static final int DEFAULT_QUEUE_SZ = 100000;
 
@@ -110,19 +112,19 @@ public class EventReactor implements MessageListener {
             for (Annotation a : m.getAnnotations()) {
                 if (a.annotationType().equals(EventHandler.class)) {
                     /* This method is an event handler */
-                    logger.log(Level.FINE, "Found EventHandler annotation on "
-                            + "method: {0}", m.getName());
+                    logger.debug("Found EventHandler annotation on "
+                            + "method: {}", m.getName());
 
                     Class<?>[] params = m.getParameterTypes();
                     if (params.length != 2) {
-                        logger.log(Level.WARNING, "Incorrect number of method "
-                                + "parameters found.  Ignoring method.");
+                        logger.warn("Incorrect number of method parameters "
+                                + "found.  Ignoring method.");
                         break;
                     }
 
                     if (params[1].equals(EventContext.class) == false) {
-                        logger.log(Level.WARNING, "Second method parameter must"
-                                + " be EventContext.  Ignoring method.");
+                        logger.warn("Second method parameter must be "
+                                + "EventContext.  Ignoring method.");
                         break;
                     }
 
@@ -130,14 +132,13 @@ public class EventReactor implements MessageListener {
                     try {
                         eventClass = extractEventClass(params);
                     } catch (EventException e) {
-                        logger.log(Level.WARNING, "Could not determine type of "
-                                + "event handled by method: " + m, e);
+                        logger.warn("Could not determine type of event handled "
+                                + "by method: " + m, e);
                         break;
                     }
 
-                    logger.log(Level.FINE,
-                            "Linking handler method [{0}] to class [{1}]",
-                            new Object[] { m.getName(), eventClass.getName() });
+                    logger.debug("Linking handler method [{}] to class [{}]",
+                            m.getName(), eventClass.getName());
                     classToMethod.put(eventClass, m);
                     break;
                 }
@@ -218,7 +219,7 @@ public class EventReactor implements MessageListener {
         try {
             messageQueue.put(message);
         } catch (InterruptedException e) {
-            logger.warning("Interrupted during onMessage delivery");
+            logger.warn("Interrupted during onMessage delivery");
             Thread.currentThread().interrupt();
         }
     }

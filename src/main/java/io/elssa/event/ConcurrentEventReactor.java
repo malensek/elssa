@@ -25,8 +25,8 @@ software, even if advised of the possibility of such damage.
 
 package io.elssa.event;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Extends the single-threaded reactor implementation defined by
@@ -42,7 +42,8 @@ import java.util.logging.Logger;
  */
 public class ConcurrentEventReactor extends EventReactor {
 
-    private static final Logger logger = Logger.getLogger("galileo");
+    private static final Logger logger
+        = LoggerFactory.getLogger(ConcurrentEventReactor.class);
 
     private boolean running;
     private int poolSize;
@@ -60,7 +61,7 @@ public class ConcurrentEventReactor extends EventReactor {
                 try {
                     processNextEvent();
                 } catch (Exception e) {
-                    logger.log(Level.WARNING, "Error processing event", e);
+                    logger.warn("Error processing event", e);
                 }
             }
         }
@@ -83,7 +84,6 @@ public class ConcurrentEventReactor extends EventReactor {
         super(handlerObject, eventMap);
         this.poolSize = poolSize;
     }
-
 
     /**
      * Creates a ConcurrentEventReactor with a custom EventWrapper
@@ -113,7 +113,7 @@ public class ConcurrentEventReactor extends EventReactor {
         running = true;
         threads = new Thread[poolSize];
         for (int i = 0; i < poolSize; ++i) {
-            logger.log(Level.INFO, "Starting worker thread {0}", i);
+            logger.info("Starting worker thread {}", i);
             threads[i] = new Thread(new EventThread());
             threads[i].start();
         }
@@ -126,13 +126,13 @@ public class ConcurrentEventReactor extends EventReactor {
     public void stop() {
         for (int i = 0; i < threads.length; ++i) {
             Thread t = threads[i];
-            logger.log(Level.INFO, "Shutting down worker thread {0}", i);
+            logger.info("Shutting down worker thread {}", i);
 
             try {
                 t.interrupt();
                 t.join();
             } catch (InterruptedException e) {
-                logger.warning("Interrupted while shutting down worker thread");
+                logger.warn("Interrupted while shutting down worker thread");
                 Thread.interrupted();
             }
         }
