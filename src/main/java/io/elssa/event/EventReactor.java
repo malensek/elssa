@@ -46,7 +46,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Implements the reactor pattern for processing incoming events
- * ({@link GalileoMessage} instances).
+ * ({@link ElssaMessage} instances).
  *
  * @author malensek
  */

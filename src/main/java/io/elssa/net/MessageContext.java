@@ -29,7 +29,7 @@ import io.netty.channel.ChannelHandlerContext;
 
 /**
  * Contains connection-specific information about the source of a
- * {@link GalileoMessage}.
+ * {@link ElssaMessage}.
  *
  * @author malensek
  */

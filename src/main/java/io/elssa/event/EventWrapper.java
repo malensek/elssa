@@ -39,14 +39,14 @@ import java.io.IOException;
 public interface EventWrapper {
 
     /**
-     * Wraps an {@link Event} up in a {@link GalileoMessage}, ready to be
+     * Wraps an {@link Event} up in a {@link ElssaMessage}, ready to be
      * transmitted across the network.
      */
     public ElssaMessage wrap(Event e)
         throws IOException;
 
     /**
-     * Unwraps a {@link GalileoMessage} to extract the {@link Event} it
+     * Unwraps a {@link ElssaMessage} to extract the {@link Event} it
      * contains.
      */
     public Event unwrap(ElssaMessage msg)
