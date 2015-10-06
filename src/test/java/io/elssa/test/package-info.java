@@ -24,6 +24,6 @@ software, even if advised of the possibility of such damage.
 */
 
 /**
- * Includes tests for the Galileo network functionality.
+ * Includes tests for the Elssa network functionality.
  */
-package galileo.test;
+package io.elssa.test;
