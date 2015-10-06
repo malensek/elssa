@@ -25,11 +25,10 @@ software, even if advised of the possibility of such damage.
 
 package io.elssa.event;
 
+import io.elssa.nn.ElssaMessage;
 import io.elssa.serialization.SerializationException;
 
 import java.io.IOException;
-
-import galileo.net.GalileoMessage;
 
 /**
  * Defines how Events are wrapped and unwrapped for serialization and
@@ -43,14 +42,14 @@ public interface EventWrapper {
      * Wraps an {@link Event} up in a {@link GalileoMessage}, ready to be
      * transmitted across the network.
      */
-    public GalileoMessage wrap(Event e)
+    public ElssaMessage wrap(Event e)
         throws IOException;
 
     /**
      * Unwraps a {@link GalileoMessage} to extract the {@link Event} it
      * contains.
      */
-    public Event unwrap(GalileoMessage msg)
+    public Event unwrap(ElssaMessage msg)
         throws IOException, SerializationException;
 
 }

@@ -27,8 +27,8 @@ package io.elssa.event;
 
 import java.io.IOException;
 
-import galileo.net.GalileoMessage;
-import galileo.net.NetworkDestination;
+import io.elssa.nn.ElssaMessage;
+import io.elssa.nn.NetworkEndpoint;
 
 /**
  * Tracks the context of an event and allows retrieving event metadata.  Allows
@@ -38,10 +38,10 @@ import galileo.net.NetworkDestination;
  */
 public class EventContext {
 
-    private GalileoMessage message;
+    private ElssaMessage message;
     private EventWrapper wrapper;
 
-    public EventContext(GalileoMessage message, EventWrapper wrapper) {
+    public EventContext(ElssaMessage message, EventWrapper wrapper) {
         this.message = message;
         this.wrapper = wrapper;
     }
@@ -51,21 +51,14 @@ public class EventContext {
      */
     public void sendReply(Event e)
     throws IOException {
-        GalileoMessage m = wrapper.wrap(e);
-        this.message.getContext().sendMessage(m);
-    }
-
-    /**
-     * @return Server port number that this event was sent to.
-     */
-    public int getServerPort() {
-        return message.getContext().getServerPort();
+        ElssaMessage m = wrapper.wrap(e);
+        this.message.context().sendMessage(m);
     }
 
     /**
      * @return NetworkDestination of the client that generated the event.
      */
-    public NetworkDestination getSource() {
-        return message.getContext().getSource();
+    public NetworkEndpoint getSource() {
+        return message.context().remoteEndpoint();
     }
 }

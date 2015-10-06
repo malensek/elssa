@@ -25,8 +25,7 @@ software, even if advised of the possibility of such damage.
 
 package io.elssa.event;
 
-import galileo.net.GalileoMessage;
-
+import io.elssa.nn.ElssaMessage;
 import io.elssa.serialization.SerializationException;
 import io.elssa.serialization.SerializationInputStream;
 import io.elssa.serialization.SerializationOutputStream;
@@ -53,7 +52,7 @@ public class BasicEventWrapper implements EventWrapper {
     }
 
     @Override
-    public GalileoMessage wrap(Event e)
+    public ElssaMessage wrap(Event e)
     throws IOException {
         ByteArrayOutputStream bOut = new ByteArrayOutputStream();
         SerializationOutputStream sOut = new SerializationOutputStream(
@@ -65,15 +64,15 @@ public class BasicEventWrapper implements EventWrapper {
         sOut.close();
 
         byte[] payload = bOut.toByteArray();
-        GalileoMessage msg = new GalileoMessage(payload);
+        ElssaMessage msg = new ElssaMessage(payload);
         return msg;
     }
 
     @Override
-    public Event unwrap(GalileoMessage msg)
+    public Event unwrap(ElssaMessage msg)
     throws IOException, SerializationException {
         ByteArrayInputStream byteIn
-            = new ByteArrayInputStream(msg.getPayload());
+            = new ByteArrayInputStream(msg.payload());
         BufferedInputStream buffIn = new BufferedInputStream(byteIn);
         SerializationInputStream sIn = new SerializationInputStream(buffIn);
 

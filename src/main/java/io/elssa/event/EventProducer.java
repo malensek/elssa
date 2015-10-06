@@ -27,9 +27,9 @@ package io.elssa.event;
 
 import java.io.IOException;
 
-import galileo.net.ClientMessageRouter;
-import galileo.net.GalileoMessage;
-import galileo.net.NetworkDestination;
+import io.elssa.nn.ClientMessageRouter;
+import io.elssa.nn.ElssaMessage;
+import io.elssa.nn.NetworkEndpoint;
 
 /**
  * This class makes it easy to publish events from a client to a server by
@@ -53,9 +53,9 @@ public class EventProducer {
      * @param destination The server to publish the event to.
      * @param e Event to be published.
      */
-    public void publishEvent(NetworkDestination destination, Event e)
+    public void publishEvent(NetworkEndpoint endpoint, Event e)
     throws IOException {
-        GalileoMessage m = reactor.wrapEvent(e);
-        router.sendMessage(destination, m);
+        ElssaMessage m = reactor.wrapEvent(e);
+        router.sendMessage(endpoint, m);
     }
 }

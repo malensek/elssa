@@ -25,12 +25,11 @@ software, even if advised of the possibility of such damage.
 
 package io.elssa.event;
 
+import io.elssa.nn.ElssaMessage;
 import io.elssa.serialization.SerializationException;
 import io.elssa.serialization.Serializer;
 
 import java.io.IOException;
-
-import galileo.net.GalileoMessage;
 
 /**
  * Wrapper for simple {@link EventWithSynopsis} events.  This wrapper does not
@@ -41,7 +40,7 @@ import galileo.net.GalileoMessage;
 public class SynopsisWrapper implements EventWrapper {
 
     @Override
-    public GalileoMessage wrap(Event e)
+    public ElssaMessage wrap(Event e)
     throws IOException {
         if (e instanceof EventWithSynopsis == false) {
             throw new IOException("This wrapper can only handle "
@@ -49,15 +48,14 @@ public class SynopsisWrapper implements EventWrapper {
         }
 
         byte[] rawMessage = Serializer.serialize(e);
-        return new GalileoMessage(rawMessage);
+        return new ElssaMessage(rawMessage);
     }
 
     @Override
-    public Event unwrap(GalileoMessage msg)
+    public Event unwrap(ElssaMessage msg)
     throws IOException, SerializationException {
-
         EventWithSynopsis event = Serializer.deserialize(
-                EventWithSynopsis.class, msg.getPayload());
+                EventWithSynopsis.class, msg.payload());
         return event;
     }
 }
