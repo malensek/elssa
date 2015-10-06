@@ -25,6 +25,9 @@ software, even if advised of the possibility of such damage.
 
 package io.elssa.nn;
 
+import java.net.InetSocketAddress;
+import java.net.SocketAddress;
+
 /**
  * Represents a TCP network endpoint; a host/port pair.
  *
@@ -38,6 +41,14 @@ public class NetworkEndpoint {
     public NetworkEndpoint(String hostname, int port) {
         this.hostname = hostname;
         this.port = port;
+    }
+
+    public NetworkEndpoint(SocketAddress address) {
+        if (address instanceof InetSocketAddress) {
+            InetSocketAddress iAddress = (InetSocketAddress) address;
+            this.hostname = iAddress.getHostName();
+            this.port = iAddress.getPort();
+        }
     }
 
     public String hostname() {
