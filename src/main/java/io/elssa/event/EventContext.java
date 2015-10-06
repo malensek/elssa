@@ -27,8 +27,8 @@ package io.elssa.event;
 
 import java.io.IOException;
 
-import io.elssa.nn.ElssaMessage;
-import io.elssa.nn.NetworkEndpoint;
+import io.elssa.net.ElssaMessage;
+import io.elssa.net.NetworkEndpoint;
 
 /**
  * Tracks the context of an event and allows retrieving event metadata.  Allows

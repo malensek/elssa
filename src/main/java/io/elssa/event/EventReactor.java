@@ -25,9 +25,9 @@ software, even if advised of the possibility of such damage.
 
 package io.elssa.event;
 
-import io.elssa.nn.ElssaMessage;
-import io.elssa.nn.MessageListener;
-import io.elssa.nn.NetworkEndpoint;
+import io.elssa.net.ElssaMessage;
+import io.elssa.net.MessageListener;
+import io.elssa.net.NetworkEndpoint;
 import io.elssa.serialization.SerializationException;
 
 import java.io.IOException;

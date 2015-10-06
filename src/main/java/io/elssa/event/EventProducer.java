@@ -27,9 +27,9 @@ package io.elssa.event;
 
 import java.io.IOException;
 
-import io.elssa.nn.ClientMessageRouter;
-import io.elssa.nn.ElssaMessage;
-import io.elssa.nn.NetworkEndpoint;
+import io.elssa.net.ClientMessageRouter;
+import io.elssa.net.ElssaMessage;
+import io.elssa.net.NetworkEndpoint;
 
 /**
  * This class makes it easy to publish events from a client to a server by

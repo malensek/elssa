@@ -23,11 +23,9 @@ any theory of liability, whether in contract, strict liability, or tort
 software, even if advised of the possibility of such damage.
 */
 
-package galileo.net;
+package io.elssa.net;
 
-import java.io.IOException;
-import java.nio.channels.SelectionKey;
-import java.nio.channels.SocketChannel;
+import io.netty.channel.ChannelHandlerContext;
 
 /**
  * Contains connection-specific information about the source of a
@@ -37,55 +35,33 @@ import java.nio.channels.SocketChannel;
  */
 public class MessageContext {
 
-    private MessageRouter router;
-    private SelectionKey key;
+    private ChannelHandlerContext channelCtx;
 
-    public MessageContext(MessageRouter router, SelectionKey key) {
-        this.router = router;
-        this.key = key;
+    public MessageContext(ChannelHandlerContext channelCtx) {
+        this.channelCtx = channelCtx;
     }
 
     /**
      * Retrieves the originating endpoint that sent the message associated with
      * this context.
      */
-    public NetworkDestination getNetworkDestination() {
-        return MessageRouter.getDestination((SocketChannel) key.channel());
-    }
-
-    public MessageRouter getMessageRouter() {
-        return router;
-    }
-
-    public SelectionKey getSelectionKey() {
-        return key;
-    }
-
-    public SocketChannel getSocketChannel() {
-        return (SocketChannel) key.channel();
+    public NetworkEndpoint remoteEndpoint() {
+        return new NetworkEndpoint(channelCtx.channel().remoteAddress());
     }
 
     /**
-     * @return Server port number that this MessageContext's parent
-     * message was sent to.
+     * Retrieves the local destination of the message associated with this
+     * context.
      */
-    public int getServerPort() {
-        return getSocketChannel().socket().getLocalPort();
-    }
-
-    /**
-     * @return NetworkDestination of the client that generated the message.
-     */
-    public NetworkDestination getSource() {
-        return NetworkDestination.fromSocketChannel(getSocketChannel());
+    public NetworkEndpoint localEndpoint() {
+        return new NetworkEndpoint(channelCtx.channel().localAddress());
     }
 
     /**
      * Sends a message back to the originator of the message this context
      * belongs to.
      */
-    public void sendMessage(GalileoMessage message)
-    throws IOException {
-        router.sendMessage(this.key, message);
+    public void sendMessage(ElssaMessage message) {
+        channelCtx.write(message);
     }
 }

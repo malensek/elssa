@@ -1,4 +1,4 @@
-package io.elssa.nn;
+package io.elssa.net;
 
 import java.util.List;
 

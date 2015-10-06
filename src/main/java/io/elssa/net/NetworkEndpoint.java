@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2013, Colorado State University
+Copyright (c) 2015, Colorado State University
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification,
@@ -23,30 +23,39 @@ any theory of liability, whether in contract, strict liability, or tort
 software, even if advised of the possibility of such damage.
 */
 
-package galileo.net;
+package io.elssa.net;
 
-import java.nio.channels.SocketChannel;
+import java.net.InetSocketAddress;
+import java.net.SocketAddress;
 
 /**
  * Represents a TCP network endpoint; a host/port pair.
  *
  * @author malensek
  */
-public class NetworkDestination {
+public class NetworkEndpoint {
 
     protected String hostname;
     protected int port;
 
-    public NetworkDestination(String hostname, int port) {
+    public NetworkEndpoint(String hostname, int port) {
         this.hostname = hostname;
         this.port = port;
     }
 
-    public String getHostname() {
+    public NetworkEndpoint(SocketAddress address) {
+        if (address instanceof InetSocketAddress) {
+            InetSocketAddress iAddress = (InetSocketAddress) address;
+            this.hostname = iAddress.getHostName();
+            this.port = iAddress.getPort();
+        }
+    }
+
+    public String hostname() {
         return hostname;
     }
 
-    public int getPort() {
+    public int port() {
         return port;
     }
 
@@ -78,7 +87,7 @@ public class NetworkDestination {
             return false;
         }
 
-        NetworkDestination other = (NetworkDestination) obj;
+        NetworkEndpoint other = (NetworkEndpoint) obj;
         return this.stringRepresentation().equals(other.stringRepresentation());
     }
 
@@ -86,13 +95,4 @@ public class NetworkDestination {
     public String toString() {
         return stringRepresentation();
     }
-
-    /**
-     * Retrieves host:port information from a SocketChannel and instantiates a
-     * new NetworkDestination with the information.
-     */
-    public static NetworkDestination fromSocketChannel(SocketChannel channel) {
-        return MessageRouter.getDestination(channel);
-    }
-
 }
