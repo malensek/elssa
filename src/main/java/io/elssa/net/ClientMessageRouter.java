@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import io.netty.bootstrap.Bootstrap;
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
@@ -20,7 +21,9 @@ public class ClientMessageRouter {
     private EventLoopGroup workerGroup;
     private Bootstrap bootstrap;
 
-    private Map<NetworkEndpoint, ChannelFuture> connections = new HashMap<>();
+    private ServerInboundHandler inboundHandler;
+
+    private Map<NetworkEndpoint, Channel> connections = new HashMap<>();
 
     public ClientMessageRouter() {
         workerGroup = new NioEventLoopGroup();
@@ -56,21 +59,22 @@ public class ClientMessageRouter {
 
     public Transmission sendMessage(
             NetworkEndpoint endpoint, ElssaMessage msg) {
-        ChannelFuture cf = ensureConnected(endpoint);
-        cf.channel().writeAndFlush(msg);
+        Channel chan = ensureConnected(endpoint);
+        ChannelFuture cf = chan.writeAndFlush(msg);
         return new Transmission(cf);
     }
 
-    private ChannelFuture ensureConnected(NetworkEndpoint ep) {
-        ChannelFuture cf = connections.get(ep);
-        if (cf == null) {
-            ChannelFuture channel = bootstrap.connect(ep.hostname(), ep.port());
-            channel.syncUninterruptibly();
-            connections.put(ep, channel);
-            cf = channel;
+    private Channel ensureConnected(NetworkEndpoint ep) {
+        Channel chan = connections.get(ep);
+        if (chan == null) {
+            ChannelFuture cf = bootstrap.connect(ep.hostname(), ep.port());
+            cf.syncUninterruptibly();
+
+            chan = cf.channel();
+            connections.put(ep, chan);
         }
 
-        return cf;
+        return chan;
     }
 
     public void shutdown() {
