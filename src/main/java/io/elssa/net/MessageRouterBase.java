@@ -24,19 +24,19 @@ public abstract class MessageRouterBase {
         listeners.remove(listener);
     }
 
-    public void onConnnect(NetworkEndpoint endpoint) {
+    protected void onConnnect(NetworkEndpoint endpoint) {
         for (MessageListener listener : listeners) {
             listener.onConnect(endpoint);
         }
     }
 
-    public void onDisconnect(NetworkEndpoint endpoint) {
+    protected void onDisconnect(NetworkEndpoint endpoint) {
         for (MessageListener listener : listeners) {
             listener.onDisconnect(endpoint);
         }
     }
 
-    public void onMessage(ElssaMessage msg) {
+    protected void onMessage(ElssaMessage msg) {
         for (MessageListener listener : listeners) {
             listener.onMessage(msg);
         }
