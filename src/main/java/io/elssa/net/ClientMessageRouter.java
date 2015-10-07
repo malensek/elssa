@@ -9,35 +9,30 @@ import java.util.concurrent.TimeUnit;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelInitializer;
+import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 
-public class ClientMessageRouter {
+public class ClientMessageRouter extends MessageRouterBase {
 
     private EventLoopGroup workerGroup;
     private Bootstrap bootstrap;
-
-    private ServerInboundHandler inboundHandler;
+    private MessagePipeline pipeline;
 
     private Map<NetworkEndpoint, Channel> connections = new HashMap<>();
 
     public ClientMessageRouter() {
         workerGroup = new NioEventLoopGroup();
 
+        pipeline = new MessagePipeline(this);
+
         bootstrap = new Bootstrap();
         bootstrap.group(workerGroup);
         bootstrap.channel(NioSocketChannel.class);
         bootstrap.option(ChannelOption.SO_KEEPALIVE, true);
-        bootstrap.handler(new ChannelInitializer<SocketChannel>() {
-            @Override
-            public void initChannel(SocketChannel ch) throws Exception {
-                ch.pipeline().addLast(new MessageEncoder());
-            }
-        });
+        bootstrap.handler(pipeline);
     }
 
     public ClientMessageRouter(int readBufferSize, int maxWriteQueueSize) {
@@ -57,10 +52,29 @@ public class ClientMessageRouter {
         return transmissions;
     }
 
+    @Override
+    protected void onWritabilityChange(ChannelHandlerContext ctx) {
+        Channel chan = ctx.channel();
+        synchronized (chan) {
+            chan.notifyAll();
+        }
+    }
+
     public Transmission sendMessage(
             NetworkEndpoint endpoint, ElssaMessage msg) {
         Channel chan = ensureConnected(endpoint);
         ChannelFuture cf = chan.writeAndFlush(msg);
+
+        if (chan.isWritable() == false) {
+            synchronized (chan) {
+                while (chan.isWritable() == false) {
+                    try {
+                        chan.wait();
+                    } catch (InterruptedException e) { }
+                }
+            }
+        }
+
         return new Transmission(cf);
     }
 
