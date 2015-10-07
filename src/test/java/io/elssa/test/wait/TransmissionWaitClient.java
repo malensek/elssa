@@ -23,23 +23,23 @@ any theory of liability, whether in contract, strict liability, or tort
 software, even if advised of the possibility of such damage.
 */
 
-package galileo.test.wait;
+package io.elssa.test.wait;
 
 import java.io.IOException;
 
-import galileo.net.ClientMessageRouter;
-import galileo.net.GalileoMessage;
-import galileo.net.NetworkDestination;
-import galileo.net.Transmission;
+import io.elssa.net.ClientMessageRouter;
+import io.elssa.net.ElssaMessage;
+import io.elssa.net.NetworkEndpoint;
+import io.elssa.net.Transmission;
 
 public class TransmissionWaitClient {
 
     private static final int MAX_MSG = 10000;
 
-    private NetworkDestination server;
+    private NetworkEndpoint server;
     private ClientMessageRouter messageRouter;
 
-    public TransmissionWaitClient(NetworkDestination server)
+    public TransmissionWaitClient(NetworkEndpoint server)
     throws IOException {
         this.server = server;
         messageRouter = new ClientMessageRouter();
@@ -49,9 +49,9 @@ public class TransmissionWaitClient {
     throws InterruptedException, IOException {
         for (int i = 0; i < numMessages; ++i) {
             byte[] payload = new byte[MAX_MSG];
-            GalileoMessage msg = new GalileoMessage(payload);
+            ElssaMessage msg = new ElssaMessage(payload);
             Transmission t = messageRouter.sendMessage(server, msg);
-            t.finish();
+            t.sync();
         }
     }
 
@@ -62,12 +62,12 @@ public class TransmissionWaitClient {
     public static void main(String[] args)
     throws Exception {
         if (args.length < 2) {
-            System.out.println("Usage: galileo.test.net.TransmissionWaitClient "
+            System.out.println("Usage: elssa.test.net.TransmissionWaitClient "
                     + "<server> <num-messages>");
             System.exit(1);
         }
 
-        NetworkDestination server = new NetworkDestination(
+        NetworkEndpoint server = new NetworkEndpoint(
                 args[0], TransmissionWaitServer.PORT);
 
         TransmissionWaitClient twc = new TransmissionWaitClient(server);
