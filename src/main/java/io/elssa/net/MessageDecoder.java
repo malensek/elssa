@@ -32,7 +32,8 @@ public class MessageDecoder extends ReplayingDecoder<DecoderState> {
 
             byte[] payload = new byte[frame.readableBytes()];
             frame.readBytes(payload);
-            ElssaMessage msg = new ElssaMessage(payload);
+            MessageContext context = new MessageContext(ctx);
+            ElssaMessage msg = new ElssaMessage(payload, context);
             out.add(msg);
             break;
 
