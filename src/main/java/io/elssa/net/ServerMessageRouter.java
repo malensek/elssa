@@ -36,7 +36,7 @@ public class ServerMessageRouter {
         boot = new ServerBootstrap();
         boot.group(bossGroup, workerGroup)
             .channel(NioServerSocketChannel.class)
-            .childHandler(new ChannelInitializer<SocketChannel>() { // (4)
+            .childHandler(new ChannelInitializer<SocketChannel>() {
                  @Override
                  public void initChannel(SocketChannel ch) throws Exception {
                      /* Inbound: */
@@ -47,8 +47,8 @@ public class ServerMessageRouter {
                      ch.pipeline().addLast(encoder);
                  }
              })
-             .option(ChannelOption.SO_BACKLOG, 128)          // (5)
-             .childOption(ChannelOption.SO_KEEPALIVE, true); // (6)
+             .option(ChannelOption.SO_BACKLOG, 128)
+             .childOption(ChannelOption.SO_KEEPALIVE, true);
     }
 
     public ServerMessageRouter(int readBufferSize, int maxWriteQueueSize) {
