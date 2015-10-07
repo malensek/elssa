@@ -23,16 +23,19 @@ any theory of liability, whether in contract, strict liability, or tort
 software, even if advised of the possibility of such damage.
 */
 
-package galileo.test.hash;
+package io.elssa.test.hash;
 
 import java.io.ByteArrayOutputStream;
 import java.security.MessageDigest;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
-import galileo.net.ClientMessageRouter;
-import galileo.net.GalileoMessage;
-import galileo.net.NetworkDestination;
-import galileo.serialization.SerializationOutputStream;
+import io.elssa.net.ClientMessageRouter;
+import io.elssa.net.ElssaMessage;
+import io.elssa.net.NetworkEndpoint;
+import io.elssa.net.Transmission;
+import io.elssa.serialization.SerializationOutputStream;
 
 /**
  * Sends events to a HashTestServer instance that will verify the events
@@ -43,11 +46,11 @@ import galileo.serialization.SerializationOutputStream;
 public class HashTestClient {
 
     private ClientMessageRouter messageRouter;
-    private NetworkDestination netDest;
+    private NetworkEndpoint netDest;
     private Random random = new Random();
     private MessageDigest md;
 
-    public HashTestClient(NetworkDestination netDest) throws Exception {
+    public HashTestClient(NetworkEndpoint netDest) throws Exception {
         this.netDest = netDest;
         messageRouter = new ClientMessageRouter();
 
@@ -65,6 +68,8 @@ public class HashTestClient {
 
     public void test(int size, int messages, boolean corrupt)
     throws Exception {
+        List<Transmission> ts = new ArrayList<>();
+        Transmission tran = null;
         for (int i = 0; i < messages; ++i) {
             byte[] data = new byte[size];
             random.nextBytes(data);
@@ -80,9 +85,17 @@ public class HashTestClient {
 //            if (corrupt) {
 //                hte.corrupt();
 //            }
-            GalileoMessage message = new GalileoMessage(payload);
-            messageRouter.sendMessage(netDest, message);
+            ElssaMessage message = new ElssaMessage(payload);
+            Transmission trans = messageRouter.sendMessage(netDest, message);
+            tran = trans;
+            //ts.add(trans);
         }
+        /*
+        for (Transmission t : ts) {
+            t.sync();
+        }
+        */
+        tran.sync();
     }
 
     public static void main(String[] args) throws Exception {
@@ -99,7 +112,7 @@ public class HashTestClient {
         int messages = Integer.parseInt(args[2]);
         boolean corrupt = (args.length == 4);
 
-        NetworkDestination netDest = new NetworkDestination(
+        NetworkEndpoint netDest = new NetworkEndpoint(
                 hostname, HashTestServer.PORT);
         HashTestClient htc = new HashTestClient(netDest);
 

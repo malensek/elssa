@@ -23,7 +23,7 @@ any theory of liability, whether in contract, strict liability, or tort
 software, even if advised of the possibility of such damage.
 */
 
-package galileo.test.hash;
+package io.elssa.test.hash;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -32,11 +32,11 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.util.Arrays;
 
-import galileo.net.GalileoMessage;
-import galileo.net.MessageListener;
-import galileo.net.NetworkDestination;
-import galileo.net.ServerMessageRouter;
-import galileo.serialization.SerializationInputStream;
+import io.elssa.net.ElssaMessage;
+import io.elssa.net.MessageListener;
+import io.elssa.net.NetworkEndpoint;
+import io.elssa.net.ServerMessageRouter;
+import io.elssa.serialization.SerializationInputStream;
 
 /**
  * Receives messages with random binary payloads (HashTestEvents), and verifies
@@ -66,12 +66,12 @@ public class HashTestServer implements MessageListener {
     }
 
     @Override
-    public void onConnect(NetworkDestination endpoint) {
+    public void onConnect(NetworkEndpoint endpoint) {
         System.out.println("Accepting connection from " + endpoint);
     }
 
     @Override
-    public void onDisconnect(NetworkDestination endpoint) {
+    public void onDisconnect(NetworkEndpoint endpoint) {
         System.out.println("Client disconnected: " + endpoint);
         printStats();
     }
@@ -82,9 +82,9 @@ public class HashTestServer implements MessageListener {
         System.out.println(bad + " bad events");
     }
 
-    public boolean verifyMessage(GalileoMessage message) throws IOException {
+    public boolean verifyMessage(ElssaMessage message) throws IOException {
         ByteArrayInputStream raw = new ByteArrayInputStream(
-                message.getPayload());
+                message.payload());
         SerializationInputStream sIn = new SerializationInputStream(raw);
         byte[] checksum = sIn.readField();
         byte[] payload = sIn.readField();
@@ -103,7 +103,7 @@ public class HashTestServer implements MessageListener {
     }
 
     @Override
-    public void onMessage(GalileoMessage message) {
+    public void onMessage(ElssaMessage message) {
         counter++;
         try {
             if (verifyMessage(message) == false) {
