@@ -55,11 +55,10 @@ public class ServerMessageRouter {
         this();
     }
 
-    public void listen(int port)
-    throws IOException, InterruptedException {
-        ChannelFuture cf = boot.bind(port).sync();
+    public void listen(int port) {
+        ChannelFuture cf = boot.bind(port).syncUninterruptibly();
         ports.put(port, cf);
-        System.out.println("listening");
+        logger.info("Listening on port {}", port);
     }
 
     public void close(int port) {
