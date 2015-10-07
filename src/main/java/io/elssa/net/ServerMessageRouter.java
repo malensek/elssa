@@ -101,8 +101,4 @@ public class ServerMessageRouter {
         inboundHandler.removeListener(listener);
     }
 
-    public static void main(String[] args) throws Exception {
-        ServerMessageRouter smr = new ServerMessageRouter();
-        smr.listen(5555);
-    }
 }

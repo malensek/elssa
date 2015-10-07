@@ -85,9 +85,4 @@ public class ClientMessageRouter {
         workerGroup.shutdownGracefully(0, 0, TimeUnit.MILLISECONDS)
             .syncUninterruptibly();
     }
-
-    public static void main(String[] args) throws Exception {
-        ClientMessageRouter cmr = new ClientMessageRouter();
-        cmr.sendMessage(new NetworkEndpoint("localhost", 5555), new ElssaMessage(new byte[2024]));
-    }
 }
