@@ -23,25 +23,24 @@ any theory of liability, whether in contract, strict liability, or tort
 software, even if advised of the possibility of such damage.
 */
 
-package galileo.test.multiport;
+package io.elssa.test.multiport;
 
-import galileo.net.ClientMessageRouter;
-import galileo.net.GalileoMessage;
-import galileo.net.NetworkDestination;
+import io.elssa.net.ClientMessageRouter;
+import io.elssa.net.ElssaMessage;
+import io.elssa.net.NetworkEndpoint;
 
 public class MultiPortClient {
 
     public static void main(String[] args)
     throws Exception {
         if (args.length < 2) {
-            System.out.println("Usage: galileo.test.net.MultiPortClient "
-                    + "<server> <port>");
+            System.out.println("Usage: MultiPortClient <server> <port>");
             System.exit(1);
         }
 
-        NetworkDestination server = new NetworkDestination(
+        NetworkEndpoint server = new NetworkEndpoint(
                 args[0], Integer.parseInt(args[1]));
         ClientMessageRouter messageRouter = new ClientMessageRouter();
-        messageRouter.sendMessage(server, new GalileoMessage(new byte[1]));
+        messageRouter.sendMessage(server, new ElssaMessage(new byte[1]));
     }
 }

@@ -23,14 +23,14 @@ any theory of liability, whether in contract, strict liability, or tort
 software, even if advised of the possibility of such damage.
 */
 
-package galileo.test.multiport;
+package io.elssa.test.multiport;
 
 import java.io.IOException;
 
-import galileo.net.GalileoMessage;
-import galileo.net.MessageListener;
-import galileo.net.NetworkDestination;
-import galileo.net.ServerMessageRouter;
+import io.elssa.net.ElssaMessage;
+import io.elssa.net.MessageListener;
+import io.elssa.net.NetworkEndpoint;
+import io.elssa.net.ServerMessageRouter;
 
 public class MultiPort implements MessageListener {
 
@@ -48,22 +48,21 @@ public class MultiPort implements MessageListener {
 
 
     @Override
-    public void onConnect(NetworkDestination endpoint) { }
+    public void onConnect(NetworkEndpoint endpoint) { }
 
     @Override
-    public void onDisconnect(NetworkDestination endpoint) { }
+    public void onDisconnect(NetworkEndpoint endpoint) { }
 
     @Override
-    public void onMessage(GalileoMessage message) {
+    public void onMessage(ElssaMessage message) {
         System.out.println("Received message on port: "
-                + message.getContext().getServerPort());
+                + message.context().localEndpoint().port());
     }
 
     public static void main(String[] args)
     throws Exception {
         if (args.length < 1) {
-            System.out.println("Usage: galileo.test.net.MultiPort "
-                    + "port1 port2 portN...");
+            System.out.println("Usage: MultiPort port1 port2 portN...");
             System.exit(1);
         }
 

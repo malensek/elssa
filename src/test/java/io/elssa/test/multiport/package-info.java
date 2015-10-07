@@ -28,4 +28,4 @@ software, even if advised of the possibility of such damage.
  * ServerMessageRouter, and distinguishing between the originating ports with
  * {@link MessageContext} instances.
  */
-package galileo.test.multiport;
+package io.elssa.test.multiport;
