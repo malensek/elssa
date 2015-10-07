@@ -23,14 +23,15 @@ any theory of liability, whether in contract, strict liability, or tort
 software, even if advised of the possibility of such damage.
 */
 
-package galileo.test.buffer;
+package io.elssa.test.buffer;
 
 import java.io.IOException;
 import java.util.Random;
 
-import galileo.net.ClientMessageRouter;
-import galileo.net.GalileoMessage;
-import galileo.net.NetworkDestination;
+import io.elssa.net.ClientMessageRouter;
+import io.elssa.net.ElssaMessage;
+import io.elssa.net.NetworkEndpoint;
+import io.elssa.net.Transmission;
 
 /**
  * Tests client non-blocking send operations.
@@ -42,10 +43,10 @@ public class BufferTestClient {
     private static final int MESSAGE_SIZE = 1024;
 
     private ClientMessageRouter messageRouter;
-    private NetworkDestination netDest;
+    private NetworkEndpoint netDest;
     private Random random = new Random();
 
-    public BufferTestClient(NetworkDestination netDest) throws Exception {
+    public BufferTestClient(NetworkEndpoint netDest) throws Exception {
         this.netDest = netDest;
         messageRouter = new ClientMessageRouter();
     }
@@ -56,12 +57,14 @@ public class BufferTestClient {
 
     public void test(int messages)
     throws Exception {
+        Transmission t = null;
         for (int i = 0; i < messages; ++i) {
             byte[] randomBytes = new byte[MESSAGE_SIZE];
             random.nextBytes(randomBytes);
-            GalileoMessage msg = new GalileoMessage(randomBytes);
-            messageRouter.sendMessage(netDest, msg);
+            ElssaMessage msg = new ElssaMessage(randomBytes);
+            t = messageRouter.sendMessage(netDest, msg);
         }
+        t.sync();
     }
 
     public static void main(String[] args) throws Exception {
@@ -74,7 +77,7 @@ public class BufferTestClient {
         String hostname = args[0];
         int messages = Integer.parseInt(args[1]);
 
-        NetworkDestination netDest = new NetworkDestination(
+        NetworkEndpoint netDest = new NetworkEndpoint(
                 hostname, BufferTestServer.PORT);
         BufferTestClient btc = new BufferTestClient(netDest);
 

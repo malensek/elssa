@@ -31,4 +31,4 @@ software, even if advised of the possibility of such damage.
  * data rather than reading it from a source and storing it in memory before
  * transmission.
  */
-package galileo.test.buffer;
+package io.elssa.test.buffer;
