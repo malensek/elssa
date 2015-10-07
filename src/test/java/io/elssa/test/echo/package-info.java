@@ -27,4 +27,4 @@ software, even if advised of the possibility of such damage.
  * Test that sends random messages from the client and then waits for the same
  * message to be sent back from the server.
  */
-package galileo.test.echo;
+package io.elssa.test.echo;
