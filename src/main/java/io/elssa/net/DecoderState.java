@@ -5,4 +5,3 @@ public enum DecoderState {
     READ_CONTENT;
 }
 
-
