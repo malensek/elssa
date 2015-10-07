@@ -23,35 +23,35 @@ any theory of liability, whether in contract, strict liability, or tort
 software, even if advised of the possibility of such damage.
 */
 
-package galileo.test.scale;
+package io.elssa.test.scale;
 
 import java.io.IOException;
 
-import galileo.net.ClientMessageRouter;
-import galileo.net.GalileoMessage;
-import galileo.net.MessageListener;
-import galileo.net.NetworkDestination;
-import galileo.test.util.PerformanceTimer;
+import io.elssa.net.ClientMessageRouter;
+import io.elssa.net.ElssaMessage;
+import io.elssa.net.MessageListener;
+import io.elssa.net.NetworkEndpoint;
+import io.elssa.util.PerformanceTimer;
 
 public class ScaleTestClient implements MessageListener, Runnable {
 
     private static boolean verbose = false;
 
     private ClientMessageRouter messageRouter;
-    private NetworkDestination netDest;
+    private NetworkEndpoint netDest;
     private PerformanceTimer pt = new PerformanceTimer("response");
 
-    public ScaleTestClient(NetworkDestination netDest) throws Exception {
+    public ScaleTestClient(NetworkEndpoint netDest) throws Exception {
         this.netDest = netDest;
         messageRouter = new ClientMessageRouter();
         messageRouter.addListener(this);
     }
 
     @Override
-    public void onConnect(NetworkDestination endpoint) { }
+    public void onConnect(NetworkEndpoint endpoint) { }
 
     @Override
-    public void onDisconnect(NetworkDestination endpoint) {
+    public void onDisconnect(NetworkEndpoint endpoint) {
         System.out.println("Shutting down");
         System.exit(1);
     }
@@ -75,11 +75,11 @@ public class ScaleTestClient implements MessageListener, Runnable {
         if (verbose) {
             pt.start();
         }
-        messageRouter.sendMessage(netDest, new GalileoMessage(payload));
+        messageRouter.sendMessage(netDest, new ElssaMessage(payload));
     }
 
     @Override
-    public void onMessage(GalileoMessage message) {
+    public void onMessage(ElssaMessage message) {
         if (verbose) {
             pt.stopAndPrint();
         }
@@ -102,7 +102,7 @@ public class ScaleTestClient implements MessageListener, Runnable {
         PerformanceTimer tt = new PerformanceTimer("StartThreads");
         tt.start();
         for (int i = 0; i < threads; ++i) {
-            NetworkDestination netDest = new NetworkDestination(
+            NetworkEndpoint netDest = new NetworkEndpoint(
                     hostname, ScaleTestServer.PORT);
 
             ScaleTestClient stc = new ScaleTestClient(netDest);

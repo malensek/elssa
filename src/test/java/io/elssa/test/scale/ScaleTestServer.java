@@ -23,17 +23,17 @@ any theory of liability, whether in contract, strict liability, or tort
 software, even if advised of the possibility of such damage.
 */
 
-package galileo.test.scale;
+package io.elssa.test.scale;
 
 import java.io.IOException;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import galileo.net.GalileoMessage;
-import galileo.net.MessageListener;
-import galileo.net.NetworkDestination;
-import galileo.net.ServerMessageRouter;
+import io.elssa.net.ElssaMessage;
+import io.elssa.net.MessageListener;
+import io.elssa.net.NetworkEndpoint;
+import io.elssa.net.ServerMessageRouter;
 
 public class ScaleTestServer implements MessageListener {
 
@@ -45,7 +45,7 @@ public class ScaleTestServer implements MessageListener {
     private int connections;
 
     private ServerMessageRouter messageRouter;
-    private BlockingQueue<GalileoMessage> eventQueue
+    private BlockingQueue<ElssaMessage> eventQueue
         = new LinkedBlockingQueue<>();
 
     public void listen()
@@ -57,17 +57,17 @@ public class ScaleTestServer implements MessageListener {
     }
 
     @Override
-    public void onConnect(NetworkDestination endpoint) {
+    public void onConnect(NetworkEndpoint endpoint) {
         System.out.println("Connections: " + (++connections));
     }
 
     @Override
-    public void onDisconnect(NetworkDestination endpoint) {
+    public void onDisconnect(NetworkEndpoint endpoint) {
         System.out.println("Connections: " + (--connections));
     }
 
     @Override
-    public void onMessage(GalileoMessage message) {
+    public void onMessage(ElssaMessage message) {
         try {
             eventQueue.put(message);
         } catch (InterruptedException e) {
@@ -78,9 +78,9 @@ public class ScaleTestServer implements MessageListener {
 
     public void processMessages() throws Exception {
         while (true) {
-            GalileoMessage message = eventQueue.take();
-            message.getContext().sendMessage(
-                    new GalileoMessage(new byte[REPLY_SIZE]));
+            ElssaMessage message = eventQueue.take();
+            message.context().sendMessage(
+                    new ElssaMessage(new byte[REPLY_SIZE]));
         }
     }
 

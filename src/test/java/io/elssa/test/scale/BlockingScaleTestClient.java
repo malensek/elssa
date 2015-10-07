@@ -23,15 +23,14 @@ any theory of liability, whether in contract, strict liability, or tort
 software, even if advised of the possibility of such damage.
 */
 
-package galileo.test.scale;
+package io.elssa.test.scale;
 
 import java.net.Socket;
 
 import java.nio.ByteBuffer;
 
-import galileo.net.MessageRouter;
-import galileo.net.NetworkDestination;
-import galileo.test.util.PerformanceTimer;
+import io.elssa.net.NetworkEndpoint;
+import io.elssa.util.PerformanceTimer;
 
 public class BlockingScaleTestClient implements Runnable {
 
@@ -40,8 +39,8 @@ public class BlockingScaleTestClient implements Runnable {
     private PerformanceTimer pt = new PerformanceTimer("response");
     private Socket socket;
 
-    public BlockingScaleTestClient(NetworkDestination netDest) throws Exception {
-        socket = new Socket(netDest.getHostname(), netDest.getPort());
+    public BlockingScaleTestClient(NetworkEndpoint netDest) throws Exception {
+        socket = new Socket(netDest.hostname(), netDest.port());
     }
 
     @Override
@@ -51,7 +50,7 @@ public class BlockingScaleTestClient implements Runnable {
                 byte[] payload = new byte[ScaleTestServer.QUERY_SIZE];
 
                 ByteBuffer buffer = ByteBuffer.allocate(
-                        payload.length + MessageRouter.PREFIX_SZ);
+                        payload.length + 4);
                 buffer.putInt(ScaleTestServer.QUERY_SIZE);
                 buffer.put(payload);
                 buffer.flip();
@@ -90,7 +89,7 @@ public class BlockingScaleTestClient implements Runnable {
         }
 
         for (int i = 0; i < threads; ++i) {
-            NetworkDestination netDest = new NetworkDestination(
+            NetworkEndpoint netDest = new NetworkEndpoint(
                     hostname, ScaleTestServer.PORT);
 
             BlockingScaleTestClient stc = new BlockingScaleTestClient(netDest);
