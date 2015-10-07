@@ -23,7 +23,7 @@ any theory of liability, whether in contract, strict liability, or tort
 software, even if advised of the possibility of such damage.
 */
 
-package galileo.test.echo;
+package io.elssa.test.echo;
 
 import java.io.IOException;
 
@@ -32,38 +32,38 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
-import galileo.net.ClientMessageRouter;
-import galileo.net.GalileoMessage;
-import galileo.net.MessageListener;
-import galileo.net.NetworkDestination;
+import io.elssa.net.ClientMessageRouter;
+import io.elssa.net.ElssaMessage;
+import io.elssa.net.MessageListener;
+import io.elssa.net.NetworkEndpoint;
 
 public class EchoTestClient implements MessageListener {
 
     private ClientMessageRouter messageRouter;
-    private NetworkDestination netDest;
+    private NetworkEndpoint netDest;
 
     private Set<String> sentMessages
         = Collections.synchronizedSet(new HashSet<String>());
 
-    public EchoTestClient(NetworkDestination netDest) throws Exception {
+    public EchoTestClient(NetworkEndpoint netDest) throws Exception {
         this.netDest = netDest;
         messageRouter = new ClientMessageRouter();
         messageRouter.addListener(this);
     }
 
     @Override
-    public void onConnect(NetworkDestination endpoint) { }
+    public void onConnect(NetworkEndpoint endpoint) { }
 
     @Override
-    public void onDisconnect(NetworkDestination endpoint) {
+    public void onDisconnect(NetworkEndpoint endpoint) {
         System.out.println("Disconnected from server. "
                 + "Goodbye, and have a nice day!");
         System.exit(0);
     }
 
     @Override
-    public void onMessage(GalileoMessage message) {
-        String messageStr = new String(message.getPayload());
+    public void onMessage(ElssaMessage message) {
+        String messageStr = new String(message.payload());
         if (sentMessages.contains(messageStr) == false) {
             System.out.println("Corrupted message: " + messageStr);
         } else {
@@ -75,7 +75,7 @@ public class EchoTestClient implements MessageListener {
     public void sendMessage()
     throws IOException {
         byte[] payload = UUID.randomUUID().toString().getBytes();
-        GalileoMessage message = new GalileoMessage(payload);
+        ElssaMessage message = new ElssaMessage(payload);
         sentMessages.add(new String(payload));
         messageRouter.sendMessage(netDest, message);
     }
@@ -90,7 +90,7 @@ public class EchoTestClient implements MessageListener {
         String hostname = args[0];
         int messages = Integer.parseInt(args[1]);
 
-        NetworkDestination server = new NetworkDestination(
+        NetworkEndpoint server = new NetworkEndpoint(
                 hostname, EchoTestServer.PORT);
         EchoTestClient etc = new EchoTestClient(server);
 

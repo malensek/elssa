@@ -23,24 +23,24 @@ any theory of liability, whether in contract, strict liability, or tort
 software, even if advised of the possibility of such damage.
 */
 
-package galileo.test.echo;
+package io.elssa.test.echo;
 
 import java.io.IOException;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import galileo.net.GalileoMessage;
-import galileo.net.MessageListener;
-import galileo.net.NetworkDestination;
-import galileo.net.ServerMessageRouter;
+import io.elssa.net.ElssaMessage;
+import io.elssa.net.MessageListener;
+import io.elssa.net.NetworkEndpoint;
+import io.elssa.net.ServerMessageRouter;
 
 public class EchoTestServer implements MessageListener {
 
     protected static final int PORT = 5050;
 
     private ServerMessageRouter messageRouter;
-    private BlockingQueue<GalileoMessage> eventQueue
+    private BlockingQueue<ElssaMessage> eventQueue
         = new LinkedBlockingQueue<>();
 
     public void listen()
@@ -52,13 +52,13 @@ public class EchoTestServer implements MessageListener {
     }
 
     @Override
-    public void onConnect(NetworkDestination endpoint) { }
+    public void onConnect(NetworkEndpoint endpoint) { }
 
     @Override
-    public void onDisconnect(NetworkDestination endpoint) { }
+    public void onDisconnect(NetworkEndpoint endpoint) { }
 
     @Override
-    public void onMessage(GalileoMessage message) {
+    public void onMessage(ElssaMessage message) {
         try {
             eventQueue.put(message);
         } catch (InterruptedException e) {
@@ -69,11 +69,10 @@ public class EchoTestServer implements MessageListener {
 
     public void processMessages() throws Exception {
         while (true) {
-            GalileoMessage message = eventQueue.take();
+            ElssaMessage message = eventQueue.take();
 
             /* Send the same thing right back */
-            message.getContext().sendMessage(
-                    new GalileoMessage(message.getPayload()));
+            message.context().sendMessage(new ElssaMessage(message.payload()));
         }
     }
 
