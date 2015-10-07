@@ -62,6 +62,6 @@ public class MessageContext {
      * belongs to.
      */
     public void sendMessage(ElssaMessage message) {
-        channelCtx.write(message);
+        channelCtx.channel().writeAndFlush(message);
     }
 }
