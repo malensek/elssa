@@ -42,3 +42,6 @@ task fatJar(type: Jar) {
     with jar
 }
 
+task testJar(type: Jar) {
+    from sourceSets.test.output
+}
