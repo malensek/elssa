@@ -1,8 +1,6 @@
 package io.elssa.net;
 
 import java.net.InetSocketAddress;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,18 +10,15 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 
 @ChannelHandler.Sharable
-public class ServerInboundHandler extends ChannelInboundHandlerAdapter {
+public class InboundHandler extends ChannelInboundHandlerAdapter {
 
-    final Logger logger = LoggerFactory.getLogger(ServerInboundHandler.class);
+    private final Logger logger
+        = LoggerFactory.getLogger(InboundHandler.class);
 
-    private List<MessageListener> listeners = new ArrayList<>();
+    private MessageRouterBase router;
 
-    public void addListener(MessageListener listener) {
-        listeners.add(listener);
-    }
-
-    public void removeListener(MessageListener listener) {
-        listeners.remove(listener);
+    public InboundHandler(MessageRouterBase router) {
+        this.router = router;
     }
 
     @Override
@@ -34,9 +29,7 @@ public class ServerInboundHandler extends ChannelInboundHandlerAdapter {
                 addr.getHostName(), addr.getPort());
         logger.info("Accepted connection: {}", endpoint.toString());
 
-        for (MessageListener listener : listeners) {
-            listener.onConnect(endpoint);
-        }
+        router.onConnnect(endpoint);
     }
 
     @Override
@@ -47,22 +40,19 @@ public class ServerInboundHandler extends ChannelInboundHandlerAdapter {
                 addr.getHostName(), addr.getPort());
         logger.info("Terminating connection: {}", endpoint);
 
-        for (MessageListener listener : listeners) {
-            listener.onDisconnect(endpoint);
-        }
+        router.onDisconnect(endpoint);
     }
 
-    /**
-     * Dispatches a message to all listening consumers.
-     *
-     * @param message {@link ElssaMessage} to dispatch.
-     */
+    @Override
+    public void channelWritabilityChanged(ChannelHandlerContext ctx)
+    throws Exception {
+        router.onWritabilityChange(ctx);
+    }
+
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
         if (msg instanceof ElssaMessage) {
-            for (MessageListener listener : listeners) {
-                listener.onMessage((ElssaMessage) msg);
-            }
+            router.onMessage((ElssaMessage) msg);
         }
     }
 
