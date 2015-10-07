@@ -87,8 +87,7 @@ public class ScaleTestClient implements MessageListener, Runnable {
 
     public static void main(String[] args) throws Exception {
         if (args.length < 2) {
-            System.out.println("galileo.test.net.ScaleTestClient "
-                    + "host num-threads");
+            System.out.println("ScaleTestClient <host> <num-threads>");
             System.out.println("Add a 3rd parameter to turn on verbose mode.");
             return;
         }
