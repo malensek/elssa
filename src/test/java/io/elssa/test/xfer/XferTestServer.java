@@ -23,16 +23,16 @@ any theory of liability, whether in contract, strict liability, or tort
 software, even if advised of the possibility of such damage.
 */
 
-package galileo.test.xfer;
+package io.elssa.test.xfer;
 
 import java.io.IOException;
 
 import java.util.Random;
 
-import galileo.net.GalileoMessage;
-import galileo.net.MessageListener;
-import galileo.net.NetworkDestination;
-import galileo.net.ServerMessageRouter;
+import io.elssa.net.ElssaMessage;
+import io.elssa.net.MessageListener;
+import io.elssa.net.NetworkEndpoint;
+import io.elssa.net.ServerMessageRouter;
 
 /**
  * Receives incoming messages from clients and increments a message counter.
@@ -58,18 +58,18 @@ public class XferTestServer implements MessageListener {
     }
 
     @Override
-    public void onConnect(NetworkDestination endpoint) {
+    public void onConnect(NetworkEndpoint endpoint) {
         System.out.println("Accepting connection from " + endpoint);
     }
 
     @Override
-    public void onDisconnect(NetworkDestination endpoint) {
+    public void onDisconnect(NetworkEndpoint endpoint) {
         System.out.println("Client disconnect: " + endpoint);
         System.out.println("Number of messages received so far: " + counter);
     }
 
     @Override
-    public void onMessage(GalileoMessage message) {
+    public void onMessage(ElssaMessage message) {
         counter++;
 //        try {
 //            Thread.sleep(random.nextInt(5));

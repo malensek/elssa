@@ -23,17 +23,16 @@ any theory of liability, whether in contract, strict liability, or tort
 software, even if advised of the possibility of such damage.
 */
 
-package galileo.test.xfer;
+package io.elssa.test.xfer;
 
 import java.io.IOException;
 import java.util.Random;
 
-import galileo.net.ClientMessageRouter;
-import galileo.net.GalileoMessage;
-import galileo.net.NetworkDestination;
-import galileo.net.Transmission;
-import galileo.test.util.PerformanceTimer;
-import galileo.test.util.PerformanceTimer.PerformanceSample;
+import io.elssa.net.ClientMessageRouter;
+import io.elssa.net.ElssaMessage;
+import io.elssa.net.NetworkEndpoint;
+import io.elssa.net.Transmission;
+import io.elssa.util.PerformanceTimer;
 
 /**
  * Tests client non-blocking send operations.
@@ -43,11 +42,11 @@ import galileo.test.util.PerformanceTimer.PerformanceSample;
 public class XferTestClient {
 
     private ClientMessageRouter messageRouter;
-    private NetworkDestination server;
+    private NetworkEndpoint server;
     private Random random = new Random();
     private PerformanceTimer pt;
 
-    public XferTestClient(NetworkDestination server)
+    public XferTestClient(NetworkEndpoint server)
     throws Exception {
         this.server = server;
         messageRouter = new ClientMessageRouter();
@@ -64,9 +63,9 @@ public class XferTestClient {
         pt.start();
         for (int i = 0; i < numMessages; ++i) {
             random.nextBytes(randomBytes);
-            GalileoMessage msg = new GalileoMessage(randomBytes);
+            ElssaMessage msg = new ElssaMessage(randomBytes);
             Transmission t = messageRouter.sendMessage(server, msg);
-            t.finish();
+            t.sync();
         }
         pt.stop();
 
@@ -82,14 +81,14 @@ public class XferTestClient {
     public static void main(String[] args) throws Exception {
         if (args.length < 2) {
             System.out.println(
-                    "Usage: XferTestClient <server>");
+                    "Usage: XferTestClient <server> <messages>");
             return;
         }
 
         String hostname = args[0];
         int messages = Integer.parseInt(args[1]);
 
-        NetworkDestination server = new NetworkDestination(
+        NetworkEndpoint server = new NetworkEndpoint(
                 hostname, XferTestServer.PORT);
         XferTestClient xc = new XferTestClient(server);
 
