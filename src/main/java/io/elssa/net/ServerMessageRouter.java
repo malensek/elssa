@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -15,12 +18,14 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 
 public class ServerMessageRouter {
 
+    private static final Logger logger
+        = LoggerFactory.getLogger(ServerMessageRouter.class);
+
     private EventLoopGroup bossGroup;
     private EventLoopGroup workerGroup;
     private ServerBootstrap boot;
 
     private MessageEncoder encoder;
-    private MessageDecoder decoder;
     private ServerInboundHandler inboundHandler;
 
     private Map<Integer, ChannelFuture> ports = new HashMap<>();
@@ -30,7 +35,6 @@ public class ServerMessageRouter {
         workerGroup = new NioEventLoopGroup();
 
         encoder = new MessageEncoder();
-        decoder = new MessageDecoder();
         inboundHandler = new ServerInboundHandler();
 
         boot = new ServerBootstrap();
@@ -40,7 +44,7 @@ public class ServerMessageRouter {
                  @Override
                  public void initChannel(SocketChannel ch) throws Exception {
                      /* Inbound: */
-                     ch.pipeline().addLast(decoder);
+                     ch.pipeline().addLast(new MessageDecoder());
                      ch.pipeline().addLast(inboundHandler);
 
                      /* Outbound: */
