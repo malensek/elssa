@@ -7,9 +7,11 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 
+@ChannelHandler.Sharable
 public class ServerInboundHandler extends ChannelInboundHandlerAdapter {
 
     final Logger logger = LoggerFactory.getLogger(ServerInboundHandler.class);
