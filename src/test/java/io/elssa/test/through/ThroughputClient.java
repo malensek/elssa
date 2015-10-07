@@ -23,25 +23,22 @@ any theory of liability, whether in contract, strict liability, or tort
 software, even if advised of the possibility of such damage.
 */
 
-package galileo.test.through;
+package io.elssa.test.through;
 
 import java.io.IOException;
 
-import galileo.event.BasicEventWrapper;
-import galileo.net.ClientMessageRouter;
-import galileo.net.GalileoMessage;
-import galileo.net.MessageListener;
-import galileo.net.NetworkDestination;
-import galileo.test.util.PerformanceTimer;
+import io.elssa.event.BasicEventWrapper;
+import io.elssa.net.ClientMessageRouter;
+import io.elssa.net.NetworkEndpoint;
 
 public class ThroughputClient {
 
     private ClientMessageRouter messageRouter;
-    private NetworkDestination netDest;
+    private NetworkEndpoint netDest;
     private ThroughputEventMap eventMap = new ThroughputEventMap();
     private BasicEventWrapper wrapper = new BasicEventWrapper(eventMap);
 
-    public ThroughputClient(NetworkDestination netDest) throws Exception {
+    public ThroughputClient(NetworkEndpoint netDest) throws Exception {
         this.netDest = netDest;
         messageRouter = new ClientMessageRouter();
     }
@@ -62,7 +59,7 @@ public class ThroughputClient {
 
         String hostname = args[0];
         ThroughputClient client = new ThroughputClient(
-                new NetworkDestination(args[0], ThroughputServer.PORT));
+                new NetworkEndpoint(hostname, ThroughputServer.PORT));
         for (int i = 0; i < 10000; ++i) {
             client.send();
         }

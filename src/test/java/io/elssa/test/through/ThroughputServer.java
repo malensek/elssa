@@ -23,14 +23,14 @@ any theory of liability, whether in contract, strict liability, or tort
 software, even if advised of the possibility of such damage.
 */
 
-package galileo.test.through;
+package io.elssa.test.through;
 
 import java.io.IOException;
 
-import galileo.event.ConcurrentEventReactor;
-import galileo.event.EventContext;
-import galileo.event.EventHandler;
-import galileo.net.ServerMessageRouter;
+import io.elssa.event.ConcurrentEventReactor;
+import io.elssa.event.EventContext;
+import io.elssa.event.EventHandler;
+import io.elssa.net.ServerMessageRouter;
 
 public class ThroughputServer {
 

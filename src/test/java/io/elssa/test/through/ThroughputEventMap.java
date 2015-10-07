@@ -1,6 +1,6 @@
-package galileo.test.through;
+package io.elssa.test.through;
 
-import galileo.event.EventMap;
+import io.elssa.event.EventMap;
 
 class ThroughputEventMap extends EventMap {
     public ThroughputEventMap() {

@@ -1,10 +1,10 @@
-package galileo.test.through;
+package io.elssa.test.through;
 
 import java.io.IOException;
 
-import galileo.event.Event;
-import galileo.serialization.SerializationInputStream;
-import galileo.serialization.SerializationOutputStream;
+import io.elssa.event.Event;
+import io.elssa.serialization.SerializationInputStream;
+import io.elssa.serialization.SerializationOutputStream;
 
 public class ThroughputMessage implements Event {
 
