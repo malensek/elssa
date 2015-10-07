@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import io.netty.channel.ChannelHandlerContext;
+
 public abstract class MessageRouterBase {
 
     private List<MessageListener> listeners
@@ -22,6 +24,10 @@ public abstract class MessageRouterBase {
 
     public void removeListener(MessageListener listener) {
         listeners.remove(listener);
+    }
+
+    protected void onWritabilityChange(ChannelHandlerContext ctx) {
+
     }
 
     protected void onConnnect(NetworkEndpoint endpoint) {
