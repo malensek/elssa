@@ -37,9 +37,7 @@ public class ServerMessageRouter extends MessageRouterBase {
             .channel(NioServerSocketChannel.class)
             .childHandler(pipeline)
             .option(ChannelOption.SO_BACKLOG, 128)
-            .childOption(ChannelOption.SO_KEEPALIVE, true)
-            .childOption(ChannelOption.WRITE_BUFFER_HIGH_WATER_MARK, 32 * 1024)
-            .childOption(ChannelOption.WRITE_BUFFER_LOW_WATER_MARK, 8 * 1024);
+            .childOption(ChannelOption.SO_KEEPALIVE, true);
     }
 
     public ServerMessageRouter(int readBufferSize, int maxWriteQueueSize) {
