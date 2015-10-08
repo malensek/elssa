@@ -21,23 +21,25 @@ public class ServerMessageRouter extends MessageRouterBase {
 
     private EventLoopGroup bossGroup;
     private EventLoopGroup workerGroup;
-    private ServerBootstrap boot;
+    private ServerBootstrap bootstrap;
     private MessagePipeline pipeline;
 
     private Map<Integer, ChannelFuture> ports = new HashMap<>();
 
     public ServerMessageRouter() {
         bossGroup = new NioEventLoopGroup();
-        workerGroup = new NioEventLoopGroup();
+        workerGroup = new NioEventLoopGroup(4);
 
         pipeline = new MessagePipeline(this);
-        
-        boot = new ServerBootstrap();
-        boot.group(bossGroup, workerGroup)
+
+        bootstrap = new ServerBootstrap()
+            .group(bossGroup, workerGroup)
             .channel(NioServerSocketChannel.class)
             .childHandler(pipeline)
             .option(ChannelOption.SO_BACKLOG, 128)
-            .childOption(ChannelOption.SO_KEEPALIVE, true);
+            .childOption(ChannelOption.SO_KEEPALIVE, true)
+            .childOption(ChannelOption.WRITE_BUFFER_HIGH_WATER_MARK, 32 * 1024)
+            .childOption(ChannelOption.WRITE_BUFFER_LOW_WATER_MARK, 8 * 1024);
     }
 
     public ServerMessageRouter(int readBufferSize, int maxWriteQueueSize) {
@@ -45,7 +47,7 @@ public class ServerMessageRouter extends MessageRouterBase {
     }
 
     public void listen(int port) {
-        ChannelFuture cf = boot.bind(port).syncUninterruptibly();
+        ChannelFuture cf = bootstrap.bind(port).syncUninterruptibly();
         ports.put(port, cf);
         logger.info("Listening on port {}", port);
     }

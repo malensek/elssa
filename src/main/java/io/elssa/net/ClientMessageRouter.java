@@ -28,11 +28,11 @@ public class ClientMessageRouter extends MessageRouterBase {
 
         pipeline = new MessagePipeline(this);
 
-        bootstrap = new Bootstrap();
-        bootstrap.group(workerGroup);
-        bootstrap.channel(NioSocketChannel.class);
-        bootstrap.option(ChannelOption.SO_KEEPALIVE, true);
-        bootstrap.handler(pipeline);
+        bootstrap = new Bootstrap()
+            .group(workerGroup)
+            .channel(NioSocketChannel.class)
+            .option(ChannelOption.SO_KEEPALIVE, true)
+            .handler(pipeline);
     }
 
     public ClientMessageRouter(int readBufferSize, int maxWriteQueueSize) {
