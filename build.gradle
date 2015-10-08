@@ -16,11 +16,11 @@ javadoc {
 }
 
 Map<String, String> jarAttributes = [
-        'Implementation-Title': 'elssa',
-        'Implementation-Vendor': 'Colorado State University',
-        'Implementation-Version': '1.0',
+        'Implementation-Title': project.name,
+        'Implementation-Vendor': project.vendor,
+        'Implementation-Version': project.version,
         'Built-By': System.getProperty('user.name'),
-        'Build-Jdk': System.getProperty('java.version')
+        'Build-Jdk': System.getProperty('java.version'),
 ]
 
 jar {
