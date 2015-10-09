@@ -2,18 +2,12 @@ package io.elssa.net;
 
 import java.net.InetSocketAddress;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 
 @ChannelHandler.Sharable
 public class InboundHandler extends ChannelInboundHandlerAdapter {
-
-    private final Logger logger
-        = LoggerFactory.getLogger(InboundHandler.class);
 
     private MessageRouterBase router;
 
@@ -27,7 +21,6 @@ public class InboundHandler extends ChannelInboundHandlerAdapter {
             = (InetSocketAddress) ctx.channel().remoteAddress();
         NetworkEndpoint endpoint = new NetworkEndpoint(
                 addr.getHostName(), addr.getPort());
-        logger.info("Accepted connection: {}", endpoint.toString());
 
         router.onConnnect(endpoint);
     }
@@ -38,7 +31,6 @@ public class InboundHandler extends ChannelInboundHandlerAdapter {
             = (InetSocketAddress) ctx.channel().remoteAddress();
         NetworkEndpoint endpoint = new NetworkEndpoint(
                 addr.getHostName(), addr.getPort());
-        logger.info("Terminating connection: {}", endpoint);
 
         router.onDisconnect(endpoint);
     }
@@ -58,6 +50,8 @@ public class InboundHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-        logger.info("Inbound channel exception", cause);
+        //TODO: this should raise an event to clients
+        System.out.println("Inbound channel exception");
+        cause.printStackTrace();
     }
 }
