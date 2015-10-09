@@ -4,9 +4,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelOption;
@@ -15,9 +12,6 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 
 public class ServerMessageRouter extends MessageRouterBase {
-
-    private static final Logger logger
-        = LoggerFactory.getLogger(ServerMessageRouter.class);
 
     private EventLoopGroup bossGroup;
     private EventLoopGroup workerGroup;
@@ -44,10 +38,16 @@ public class ServerMessageRouter extends MessageRouterBase {
         this();
     }
 
+    /**
+     * Begins listening for incoming messages on the specified port. When this
+     * method returns, the server socket is open and ready to accept
+     * connections.
+     *
+     * @param port The port to listen on
+     */
     public void listen(int port) {
         ChannelFuture cf = bootstrap.bind(port).syncUninterruptibly();
         ports.put(port, cf);
-        logger.info("Listening on port {}", port);
     }
 
     public void close(int port) {
