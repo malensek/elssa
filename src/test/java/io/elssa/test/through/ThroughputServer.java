@@ -25,8 +25,6 @@ software, even if advised of the possibility of such damage.
 
 package io.elssa.test.through;
 
-import java.io.IOException;
-
 import io.elssa.event.ConcurrentEventReactor;
 import io.elssa.event.EventContext;
 import io.elssa.event.EventHandler;
@@ -40,14 +38,14 @@ public class ThroughputServer {
     protected static final int REPLY_SIZE = 4096;
 
     private ThroughputEventMap eventMap = new ThroughputEventMap();
-    private ConcurrentEventReactor reactor
-        = new ConcurrentEventReactor(this, eventMap, 8);
+    private ConcurrentEventReactor reactor;
     private ServerMessageRouter messageRouter;
 
     private long counter;
 
     public void start()
-    throws IOException {
+    throws Exception {
+        reactor = new ConcurrentEventReactor(this, eventMap, 8);
         messageRouter = new ServerMessageRouter();
         messageRouter.addListener(reactor);
         reactor.start();
