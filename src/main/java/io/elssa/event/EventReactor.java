@@ -41,9 +41,6 @@ import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * Implements the reactor pattern for processing incoming events
  * ({@link ElssaMessage} instances).
@@ -51,9 +48,6 @@ import org.slf4j.LoggerFactory;
  * @author malensek
  */
 public class EventReactor implements MessageListener {
-
-    private static final Logger logger
-        = LoggerFactory.getLogger(EventReactor.class);
 
     private static final int DEFAULT_QUEUE_SZ = 100000;
 
@@ -77,7 +71,8 @@ public class EventReactor implements MessageListener {
      * integer identification numbers to specific classes that represent an
      * event.
      */
-    public EventReactor(Object handlerObject, EventMap eventMap) {
+    public EventReactor(Object handlerObject, EventMap eventMap)
+    throws EventLinkException {
         this.handlerClass = handlerObject.getClass();
         this.handlerObject = handlerObject;
         this.eventWrapper = new BasicEventWrapper(eventMap);
@@ -92,7 +87,8 @@ public class EventReactor implements MessageListener {
      * for event handlers, denoted by the {@link EventHandler} annotation.
      * @param wrapper A problem-specific {@link EventWrapper} implementation.
      */
-    public EventReactor(Object handlerObject, EventWrapper wrapper) {
+    public EventReactor(Object handlerObject, EventWrapper wrapper)
+    throws EventLinkException {
         this.handlerClass = handlerObject.getClass();
         this.handlerObject = handlerObject;
         this.eventWrapper = wrapper;
@@ -104,40 +100,38 @@ public class EventReactor implements MessageListener {
      * This method links incoming event types to their relevant event handlers
      * found in the handlerObject.
      */
-    protected void linkEventHandlers() {
+    protected void linkEventHandlers()
+    throws EventLinkException {
         classToMethod.clear();
 
         for (Method m : handlerClass.getMethods()) {
             for (Annotation a : m.getAnnotations()) {
                 if (a.annotationType().equals(EventHandler.class)) {
                     /* This method is an event handler */
-                    logger.debug("Found EventHandler annotation on "
-                            + "method: {}", m.getName());
-
                     Class<?>[] params = m.getParameterTypes();
                     if (params.length != 2) {
-                        logger.warn("Incorrect number of method parameters "
-                                + "found.  Ignoring method.");
-                        break;
+                        throw new EventLinkException(
+                                "Cannot link event handler method: "
+                                + m.toString() + "; requires exactly 2 "
+                                + "parameters, found " + params.length);
                     }
 
                     if (params[1].equals(EventContext.class) == false) {
-                        logger.warn("Second method parameter must be "
-                                + "EventContext.  Ignoring method.");
-                        break;
+                        throw new EventLinkException(
+                                "Cannot link event handler method: "
+                                + m.toString() + "; second parameter must be "
+                                + "of type EventContext.");
                     }
 
                     Class<?> eventClass;
                     try {
                         eventClass = extractEventClass(params);
                     } catch (EventException e) {
-                        logger.warn("Could not determine type of event handled "
-                                + "by method: " + m, e);
-                        break;
+                        throw new EventLinkException("Could not determine the "
+                                + "type of event handled by method: "
+                                + m.toString(), e);
                     }
 
-                    logger.debug("Linking handler method [{}] to class [{}]",
-                            m.getName(), eventClass.getName());
                     classToMethod.put(eventClass, m);
                     break;
                 }
@@ -218,7 +212,6 @@ public class EventReactor implements MessageListener {
         try {
             messageQueue.put(message);
         } catch (InterruptedException e) {
-            logger.warn("Interrupted during onMessage delivery");
             Thread.currentThread().interrupt();
         }
     }

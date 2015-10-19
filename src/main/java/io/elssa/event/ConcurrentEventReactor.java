@@ -25,9 +25,6 @@ software, even if advised of the possibility of such damage.
 
 package io.elssa.event;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * Extends the single-threaded reactor implementation defined by
  * {@link EventReactor} to enable multiple worker threads for processing events
@@ -41,9 +38,6 @@ import org.slf4j.LoggerFactory;
  * @author malensek
  */
 public class ConcurrentEventReactor extends EventReactor {
-
-    private static final Logger logger
-        = LoggerFactory.getLogger(ConcurrentEventReactor.class);
 
     private boolean running;
     private int poolSize;
@@ -61,7 +55,8 @@ public class ConcurrentEventReactor extends EventReactor {
                 try {
                     processNextEvent();
                 } catch (Exception e) {
-                    logger.warn("Error processing event", e);
+                    System.out.println("Unhandled event exception");
+                    e.printStackTrace();
                 }
             }
         }
@@ -80,7 +75,8 @@ public class ConcurrentEventReactor extends EventReactor {
      * should maintain.
      */
     public ConcurrentEventReactor(
-            Object handlerObject, EventMap eventMap, int poolSize) {
+            Object handlerObject, EventMap eventMap, int poolSize)
+    throws EventLinkException {
         super(handlerObject, eventMap);
         this.poolSize = poolSize;
     }
@@ -96,7 +92,8 @@ public class ConcurrentEventReactor extends EventReactor {
      * should maintain.
      */
     public ConcurrentEventReactor(Object handlerObject, EventWrapper wrapper,
-            int poolSize) {
+            int poolSize)
+    throws EventLinkException {
         super(handlerObject, wrapper);
         this.poolSize = poolSize;
     }
@@ -113,7 +110,6 @@ public class ConcurrentEventReactor extends EventReactor {
         running = true;
         threads = new Thread[poolSize];
         for (int i = 0; i < poolSize; ++i) {
-            logger.info("Starting worker thread {}", i);
             threads[i] = new Thread(new EventThread());
             threads[i].start();
         }
@@ -126,13 +122,11 @@ public class ConcurrentEventReactor extends EventReactor {
     public void stop() {
         for (int i = 0; i < threads.length; ++i) {
             Thread t = threads[i];
-            logger.info("Shutting down worker thread {}", i);
 
             try {
                 t.interrupt();
                 t.join();
             } catch (InterruptedException e) {
-                logger.warn("Interrupted while shutting down worker thread");
                 Thread.interrupted();
             }
         }
