@@ -4,12 +4,7 @@
 /.settings
 
 # Local dev files
-/build
-/.gradle
+/target
 
-# javadoc-generated documentation
-docs/api
-
-# Mac OS File Attributes
+# OS-specific metadata/files
 .DS_Store
-/bin/
