@@ -1,0 +1,16 @@
+Elssa
+=====
+
+Copyright (c) 2015 Colorado State University
+
+The Elssa Project is licensed under the 2-clause BSD license:
+
+    http://opensource.org/licenses/BSD-2-Clause
+
+--------------------------------------------------------------------------------
+
+This project includes additional software dependencies. Licenses are located in
+the 'licenses' directory. External dependencies include:
+
+* Netty [http://netty.io] - licenses/Apache-2.0.txt
+
