@@ -33,6 +33,7 @@
                     <target>1.8</target>
 
                     <compilerArgument>-Xlint:all</compilerArgument>
+                    <compilerArgument>-Xpkginfo:always</compilerArgument>
                     <showDeprecation>true</showDeprecation>
                     <showWarnings>true</showWarnings>
                 </configuration>
