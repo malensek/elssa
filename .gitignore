@@ -5,6 +5,7 @@
 
 # Local dev files
 /target
+/bin
 
 # OS-specific metadata/files
 .DS_Store
